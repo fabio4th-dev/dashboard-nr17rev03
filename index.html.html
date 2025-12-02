@@ -1,0 +1,3399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #2980b9;
+            --light-color: #ecf0f1;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --gray-color: #95a5a6;
+            --text-color: #2c3e50;
+            --border-color: #bdc3c7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(25deg);
+        }
+        
+        .project-title {
+            font-size: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .project-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 5px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .project-info {
+            display: flex;
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .tabs-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .tabs-header {
+            display: flex;
+            background-color: var(--light-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-button {
+            padding: 18px 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-button:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .tab-button.active {
+            background-color: white;
+            color: var(--secondary-color);
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--secondary-color);
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        #commissioning .cards-container {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        #commissioning .card {
+            padding: 20px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #commissioning .card-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        #commissioning .progress-container {
+            margin-bottom: 12px;
+        }
+
+        #commissioning .progress-label {
+            font-size: 13px;
+        }
+
+        #commissioning .status-badge {
+            font-size: 12px;
+            padding: 4px 10px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: var(--secondary-color);
+        }
+        
+        .progress-container {
+            margin-bottom: 18px;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.8s ease;
+        }
+        
+        .progress-fill.planned {
+            background-color: var(--secondary-color);
+        }
+        
+        .progress-fill.actual {
+            background-color: var(--success-color);
+        }
+        
+        .chart-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            height: 450px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-title i {
+            color: var(--secondary-color);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .status-completed {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-ontrack {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .status-delayed {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .wbs-tree {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .wbs-item {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .wbs-item:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+            border-radius: 5px;
+            padding-left: 25px;
+        }
+        
+        .wbs-level-1 {
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-left: 0;
+            font-size: 18px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .wbs-level-2 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            color: var(--primary-color);
+        }
+        
+        .wbs-level-3, .wbs-level-4 {
+            padding-left: 30px;
+            font-size: 15px;
+        }
+        
+        .wbs-level-3::before, .wbs-level-4::before {
+            content: "•";
+            position: absolute;
+            left: 15px;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        
+        .metric-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label {
+            font-size: 15px;
+            color: var(--gray-color);
+        }
+        
+        .s-curve-container {
+            height: 350px;
+        }
+        
+        .s-curve-dates {
+            display: grid;
+            grid-template-columns: repeat(17, 1fr);
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--gray-color);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+        
+        .date-item {
+            padding: 5px 2px;
+            line-height: 1.3;
+        }
+        
+        .week-label {
+            font-weight: 600;
+            font-size: 10px;
+        }
+        
+        .date-label {
+            font-size: 9px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        
+        .gantt-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            overflow: auto;
+        }
+        
+        .gantt-chart {
+            min-width: 1200px;
+        }
+        
+        .gantt-header {
+            display: grid;
+            grid-template-columns: 300px repeat(17, 1fr);
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+        }
+        
+        .gantt-header-cell {
+            padding: 12px 4px;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        
+        .gantt-header-cell:first-child {
+            text-align: left;
+            padding-left: 15px;
+        }
+        
+        .gantt-body {
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            overflow: hidden;
+        }
+        
+        .gantt-row {
+            display: grid;
+            grid-template-columns: 300px repeat(17, 1fr);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .gantt-row:last-child {
+            border-bottom: none;
+        }
+        
+        .gantt-row:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .gantt-cell {
+            padding: 8px 4px;
+            border-right: 1px solid var(--border-color);
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gantt-cell:first-child {
+            font-weight: 500;
+            border-right: 2px solid var(--border-color);
+            justify-content: flex-start;
+            padding-left: 15px;
+            font-size: 13px;
+        }
+        
+        .gantt-cell:last-child {
+            border-right: none;
+        }
+        
+        .gantt-task {
+            height: 20px;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            width: 100%;
+        }
+        
+        .gantt-task.completed {
+            background-color: var(--success-color);
+        }
+        
+        .gantt-task.in-progress {
+            background-color: var(--secondary-color);
+        }
+        
+        .gantt-task.planned {
+            background-color: var(--warning-color);
+        }
+        
+        .gantt-task.not-started {
+            background-color: var(--gray-color);
+        }
+        
+        .gantt-milestone {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid var(--danger-color);
+            position: relative;
+        }
+        
+        .gantt-milestone::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -6px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid var(--danger-color);
+        }
+        
+        .gantt-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .gantt-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .gantt-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .current-week {
+            background-color: rgba(52, 152, 219, 0.1) !important;
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .footer-info {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .developer-info {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 5px;
+        }
+        
+        .gantt-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+        
+        .gantt-table th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 22px 12px;
+            text-align: center;
+            border: 1px solid #34495e;
+            min-width: 45px;
+            font-size: 9px;
+            line-height: 1.1;
+        }
+        
+        .gantt-table th:first-child {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: left;
+            min-width: 300px;
+        }
+        
+        .gantt-table td {
+            padding: 4px;
+            border: 1px solid #bdc3c7;
+            text-align: left;
+            font-size: 10px;
+            line-height: 1.2;
+        }
+        
+        .gantt-table .eap-header {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            padding: 6px;
+            font-size: 10px;
+        }
+        
+        .gantt-table .eap-subitem {
+            padding-left: 12px;
+            font-size: 10px;
+        }
+        
+        .gantt-table .task-active {
+            background-color: #3498db !important;
+        }
+        
+        .gantt-table .task-supply {
+            background-color: #9b59b6 !important;
+        }
+        
+        .gantt-table .task-construction {
+            background-color: #2ecc71 !important;
+        }
+        
+        .gantt-table .task-commissioning {
+            background-color: #f1c40f !important;
+        }
+        
+        .gantt-table .task-operation {
+            background-color: #e74c3c !important;
+        }
+        
+        /* Estilos para a nova aba de upload */
+        #data-update .upload-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .upload-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .upload-title i {
+            color: var(--secondary-color);
+        }
+        
+        .upload-description {
+            color: var(--gray-color);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .upload-area.drag-over {
+            border-color: var(--success-color);
+            background-color: rgba(39, 174, 96, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        
+        .upload-subtext {
+            font-size: 14px;
+            color: var(--gray-color);
+            margin-bottom: 20px;
+        }
+        
+        .browse-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .browse-button:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .selected-file {
+            background-color: rgba(39, 174, 96, 0.1);
+            border: 1px solid var(--success-color);
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-icon {
+            color: var(--success-color);
+            font-size: 20px;
+        }
+        
+        .file-name {
+            font-weight: 500;
+        }
+        
+        .file-size {
+            color: var(--gray-color);
+            font-size: 13px;
+        }
+        
+        .remove-file {
+            color: var(--danger-color);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 18px;
+        }
+        
+        .upload-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .upload-button {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .upload-button:hover:not(:disabled) {
+            background-color: #219653;
+        }
+        
+        .upload-button:disabled {
+            background-color: var(--gray-color);
+            cursor: not-allowed;
+        }
+        
+        .clear-button {
+            background-color: transparent;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-button:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        
+        .csv-preview {
+            margin-top: 25px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+        
+        .csv-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .csv-table th {
+            background-color: var(--light-color);
+            padding: 10px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .csv-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .csv-table tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .upload-status {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .upload-status.success {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+            display: block;
+        }
+        
+        .upload-status.error {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+            display: block;
+        }
+        
+        .csv-format {
+            background-color: rgba(52, 152, 219, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .format-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .format-example {
+            font-family: monospace;
+            font-size: 12px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        
+        .download-template {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .download-template:hover {
+            background-color: #1a252f;
+        }
+        
+        /* Estilos específicos para a nova aba HHT */
+        .hht-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        
+        .hht-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--secondary-color);
+            text-align: center;
+        }
+        
+        .hht-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hht-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .hht-label {
+            font-size: 16px;
+            color: var(--gray-color);
+            margin-bottom: 15px;
+        }
+        
+        .hht-subtitle {
+            font-size: 14px;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .hht-total {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-top: 10px;
+        }
+        
+        .hht-chart-container {
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        
+        .hht-table-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+        
+        .hht-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .hht-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hht-table th:first-child {
+            text-align: left;
+            padding-left: 15px;
+            min-width: 200px;
+        }
+        
+        .hht-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .hht-table td:first-child {
+            text-align: left;
+            padding-left: 15px;
+            font-weight: 500;
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .hht-table tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .hht-table .current-week {
+            background-color: rgba(52, 152, 219, 0.1);
+            font-weight: 600;
+        }
+        
+        .hht-table .zero-value {
+            color: var(--gray-color);
+        }
+        
+        .hht-table .positive-value {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .hht-table .hht-value-cell {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        /* Ajustes para responsividade */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .project-info {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .tabs-header {
+                flex-direction: column;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .legend {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .gantt-container {
+                overflow-x: auto;
+            }
+            
+            #commissioning .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .upload-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .upload-actions button {
+                width: 100%;
+            }
+            
+            .hht-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hht-table {
+                font-size: 10px;
+            }
+            
+            .hht-table th, .hht-table td {
+                padding: 8px 4px;
+            }
+            
+            .hht-table th:first-child, .hht-table td:first-child {
+                padding-left: 8px;
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <img src="Suzano LOGO.png" alt="Suzano Logo" style="height: 80px; width: auto;">
+                <div>
+                    <div class="project-title">SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM</div>
+                    <div class="project-subtitle" style="font-size: 15px; line-height: 1.3;"><strong>Acompanhamento do Projeto</strong> - Semana 12 (23/11 até 30/11)</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div class="project-info">
+                    <div class="info-item">
+                        <div class="info-label">Duração</div>
+                        <div class="info-value">75 dias</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Início</div>
+                        <div class="info-value">15/09/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Término</div>
+                        <div class="info-value">09/01/2026</div>
+                    </div>
+               </div>
+<div style="display: flex; flex-direction: column; align-items: center; margin-left: 20px; position: relative; top: -1px;">
+    <!-- Logo FW Company (acima) -->
+    <img src="FW LOGO (remov).png" alt="FW Company Logo" 
+         style="height: 60px; width: auto;">
+    
+    <!-- Logos Altercon e Delservin (abaixo, na mesma linha) -->
+    <div style="display: flex; align-items: center; gap: 15px; margin-top: -12px;">
+        <img src="Altercon LOGO.png" alt="Altercon LOGO" style="height: 60px; width: auto;">
+        <img src="Delservin LOGO.png" alt="Delservin LOGO" style="height: 29px; width: auto;">
+    </div>
+</div>
+</div>
+            </div>
+        </div>
+        
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-button active" data-tab="overview">
+                    <i class="fas fa-chart-pie"></i> Visão Geral
+                </button>
+                <button class="tab-button" data-tab="wbs">
+                    <i class="fas fa-sitemap"></i> EAP
+                </button>
+                <button class="tab-button" data-tab="progress">
+                    <i class="fas fa-tasks"></i> Progresso
+                </button>
+                <button class="tab-button" data-tab="schedule">
+                    <i class="fas fa-calendar-alt"></i> Cronograma
+                </button>
+                <!-- NOVA ABA: HHT -->
+                <button class="tab-button" data-tab="hht">
+                    <i class="fas fa-hard-hat"></i> HHT / Segurança
+                </button>
+                <button class="tab-button" data-tab="s-curve">
+                    <i class="fas fa-chart-line"></i> Curva S
+                </button>
+                <button class="tab-button" data-tab="commissioning">
+                    <i class="fas fa-cogs"></i> Comissionamento
+                </button>
+                <!-- NOVA ABA ADICIONADA -->
+                <button class="tab-button" data-tab="data-update">
+                    <i class="fas fa-database"></i> Atualizar Dados
+                </button>
+            </div>
+            
+            <!-- Conteúdo das abas -->
+            <div class="tab-content active" id="overview">
+                <h2 class="section-title"><i class="fas fa-chart-pie"></i> Visão Geral do Projeto</h2>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">57,1%</div>
+                        <div class="metric-label">Progresso Previsto</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">76,1%</div>
+                        <div class="metric-label">Progresso Real</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">75</div>
+                        <div class="metric-label">Dias de Duração</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">6</div>
+                        <div class="metric-label">Fases Principais</div>
+                    </div>
+                </div>
+                
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-drafting-compass"></i> Engenharia</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>59,6%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 59.6%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>80,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 80.0%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-ontrack"><i class="fas fa-clock"></i> Não atrasada</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-truck-loading"></i> Fornecimento</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>100,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>100,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-completed"><i class="fas fa-check-circle"></i> Concluída</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-wrench"></i> Construção e Montagem</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>56,2%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 56.2%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>74,3%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 74.3%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-ontrack"><i class="fas fa-clock"></i> Não atrasada</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-cogs"></i> Comissionamento</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>0,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>62,5%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 62.5%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-ontrack"><i class="fas fa-clock"></i> Não atrasada</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title"><i class="fas fa-chart-bar"></i> Progresso por Fase do Projeto</div>
+                    <canvas id="progressByPhaseChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="wbs">
+                <h2 class="section-title"><i class="fas fa-sitemap"></i> Estrutura Analítica do Projeto (EAP)</h2>
+                
+                <div class="wbs-tree">
+                    <div class="wbs-item wbs-level-1">1. SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM</div>
+                    
+                    <div class="wbs-item wbs-level-2">1.1 Marcos Principais </div>
+                    <div class="wbs-item wbs-level-3"> Início do Projeto </div>
+                    <div class="wbs-item wbs-level-3"> Término do Projeto </div>
+                    
+                    <div class="wbs-item wbs-level-2">1.2 Engenharia</div>
+                    <div class="wbs-item wbs-level-3"> Elaboração dos Projetos</div>
+                    <div class="wbs-item wbs-level-3"> Aprovação dos Projetos (Cliente)</div>
+                    <div class="wbs-item wbs-level-3"> Montagem dos Equipamentos (Fornecedor)</div>
+                    <div class="wbs-item wbs-level-3"> Aprovação final</div>
+                    <div class="wbs-item wbs-level-3"> Despacho do Painel PL-001 para Imperatriz-MA</div>
+                    
+                    <div class="wbs-item wbs-level-2">1.3 Fornecimento  - CONCLUÍDA</div>
+                    <div class="wbs-item wbs-level-3"> Compra de Materiais</div>
+                    <div class="wbs-item wbs-level-3"> Transporte dos Materiais Para Imperatriz-MA</div>
+                    <div class="wbs-item wbs-level-3"> Mobilização de Equipe e Recursos no Local</div>
+                    
+                    <div class="wbs-item wbs-level-2">1.4 Construção e Montagem </div>
+                    <div class="wbs-item wbs-level-3"> Montagem de encaminhamentos</div>
+                    <div class="wbs-item wbs-level-3"> Lançamento dos cabos</div>
+                    <div class="wbs-item wbs-level-3"> Ligação dos cabos nos motores</div>
+                    <div class="wbs-item wbs-level-3"> Instalação do painel PL-001</div>
+                    <div class="wbs-item wbs-level-3"> Ligações elétricas dos motores</div>
+                    
+                    <div class="wbs-item wbs-level-2">1.5 Comissionamento </div>
+                    <div class="wbs-item wbs-level-3"> Ventilador 1 - EC 01 (Motor e cabo megados)</div>
+                    <div class="wbs-item wbs-level-3"> Ventilador 2 - EC 02 (Motor e cabo megados)</div>
+                    <div class="wbs-item wbs-level-3"> Exaustor 1 - EA 01 (Motor e cabo megados)</div>
+                    <div class="wbs-item wbs-level-3"> Exaustor 2 - EA 02 (Motor e cabo megados)</div>
+                    
+                    <div class="wbs-item wbs-level-2">1.6 Operação Assistida e Encerramento do Projeto </div>
+                    <div class="wbs-item wbs-level-3"> Aceite final dos serviços</div>
+                    <div class="wbs-item wbs-level-3"> Limpeza final</div>
+                    <div class="wbs-item wbs-level-3"> Desmobilização</div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="progress">
+                <h2 class="section-title"><i class="fas fa-tasks"></i> Progresso Detalhado</h2>
+                
+                <div class="chart-container">
+                    <div class="chart-title"><i class="fas fa-chart-radar"></i> Progresso Previsto vs Real</div>
+                    <canvas id="progressComparisonChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title"><i class="fas fa-chart-doughnut"></i> Status das Atividades</div>
+                    <canvas id="activitiesStatusChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="schedule">
+                <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Cronograma do Projeto</h2>
+                
+                <div class="chart-container" style="height: 700px; overflow-y: auto; padding: 0;">
+                    <div class="chart-title" style="position: sticky; top: 0; background: white; z-index: 100; padding: 20px 25px; margin: 0; border-bottom: 1px solid var(--border-color);">
+                        <i class="fas fa-chart-gantt"></i> Gráfico de Gantt - Detalhamento por EAP
+                    </div>
+                    <div style="padding: 0 25px 25px 25px;">
+                        <table class="gantt-table" style="width: 100%;">
+                            <thead style="position: sticky; top: 80px; background: #2c3e50; z-index: 50;">
+                                <tr>
+                                    <th style="min-width: 300px; text-align: left;">Atividade</th>
+                                    <th>S.01<br>14/09</th>
+                                    <th>S.02<br>21/09</th>
+                                    <th>S.03<br>28/09</th>
+                                    <th>S.04<br>05/10</th>
+                                    <th>S.05<br>12/10</th>
+                                    <th>S.06<br>19/10</th>
+                                    <th>S.07<br>26/10</th>
+                                    <th>S.08<br>02/11</th>
+                                    <th>S.09<br>09/11</th>
+                                    <th>S.10<br>16/11</th>
+                                    <th>S.11<br>23/11</th>
+                                    <th>S.12<br>30/11</th>
+                                    <th>S.13<br>07/12</th>
+                                    <th>S.14<br>14/12</th>
+                                    <th>S.15<br>21/12</th>
+                                    <th>S.16<br>28/12</th>
+                                    <th>S.17<br>04/01</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+    <!-- Marcos Principais -->
+    <tr>
+        <td class="eap-header" style="background-color: #2c3e50;">1.1 Marcos Principais</td>
+        <td colspan="17"></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Início do Projeto (15/09)</td>
+        <td style="background-color: #2c3e50; color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Término do Projeto (09/01)</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td style="background-color: #2c3e50; color: white; text-align: center; font-size: 11px; font-weight: bold;">0%</td>
+    </tr>
+
+    <!-- Engenharia -->
+    <tr>
+        <td class="eap-header" style="background-color: #3498db;">1.2 Engenharia (20%)</td>
+        <td colspan="17"></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Elaboração dos Projetos</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Aprovação dos Projetos</td>
+        <td></td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Montagem dos Equipamentos</td>
+        <td></td><td></td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">10%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">25%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">40%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">75%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">85%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">90%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">95%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Aprovação final</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Despacho do Painel</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td>
+    </tr>
+
+    <!-- Fornecimento -->
+    <tr>
+        <td class="eap-header" style="background-color: #9b59b6;">1.3 Fornecimento (15%) - CONCLUÍDA</td>
+        <td colspan="17"></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Compra de Materiais</td>
+        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Transporte dos Materiais</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Mobilização</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+
+    <!-- Construção e Montagem -->
+    <tr>
+        <td class="eap-header" style="background-color: #2ecc71;">1.4 Construção e Montagem (54%)</td>
+        <td colspan="17"></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Montagem de encaminhamentos</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Lançamento dos cabos</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td></td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Ligação dos cabos nos motores</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td></td>
+        <td></td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Instalação do painel PL-001</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td><td></td><td></td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">40%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">80%</td>
+        <td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Ligações elétricas dos motores</td>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td><td></td><td></td>
+        <td></td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">20%</td>
+        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
+        <td></td><td></td><td></td>
+    </tr>
+
+    <!-- Comissionamento -->
+    <tr>
+        <td class="eap-header" style="background-color: #f1c40f;">1.5 Comissionamento (8%)</td>
+        <td colspan="17"></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Testes de equipamentos</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">15%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">85%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">95%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Megação de cabos e motores</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
+        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td><td></td><td></td>
+    </tr>
+
+    <!-- Operação Assistida -->
+    <tr>
+        <td class="eap-header" style="background-color: #e74c3c;">1.6 Operação Assistida (3%)</td>
+        <td colspan="17"></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Aceite final dos serviços</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
+        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Limpeza final</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td>
+        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="eap-subitem">Desmobilização</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td>
+        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
+        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
+    </tr>
+</tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="gantt-legend">
+                    <div class="gantt-legend-item">
+                        <div class="gantt-legend-color" style="background-color: #2c3e50;"></div>
+                        <span>Marcos</span>
+                    </div>
+                    <div class="gantt-legend-item">
+                        <div class="gantt-legend-color" style="background-color: #3498db;"></div>
+                        <span>Engenharia</span>
+                    </div>
+                    <div class="gantt-legend-item">
+                        <div class="gantt-legend-color" style="background-color: #9b59b6;"></div>
+                        <span>Fornecimento</span>
+                    </div>
+                    <div class="gantt-legend-item">
+                        <div class="gantt-legend-color" style="background-color: #2ecc71;"></div>
+                        <span>Construção</span>
+                    </div>
+                    <div class="gantt-legend-item">
+                        <div class="gantt-legend-color" style="background-color: #f1c40f;"></div>
+                        <span>Comissionamento</span>
+                    </div>
+                    <div class="gantt-legend-item">
+                        <div class="gantt-legend-color" style="background-color: #e74c3c;"></div>
+                        <span>Operação</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NOVA ABA: HHT / Segurança -->
+            <div class="tab-content" id="hht">
+                <h2 class="section-title"><i class="fas fa-hard-hat"></i> Indicadores de HHT e Segurança</h2>
+                
+                <div class="hht-grid">
+                    <div class="hht-card">
+                        <div class="hht-label">HHT Semana Atual</div>
+                        <div class="hht-value" id="hht-current">396</div>
+                        <div class="hht-subtitle">Homens-Hora Trabalhados (x1000)</div>
+                    </div>
+                    
+                    <div class="hht-card">
+                        <div class="hht-label">HHT Acumulado</div>
+                        <div class="hht-value" id="hht-accumulated">2,948</div>
+                        <div class="hht-subtitle">Total do Projeto (x1000)</div>
+                    </div>
+                    
+                    <div class="hht-card">
+                        <div class="hht-label">Acidentes com Afastamento</div>
+                        <div class="hht-value" id="caf-count">0</div>
+                        <div class="hht-subtitle">CAF - Total do Projeto</div>
+                    </div>
+                    
+                    <div class="hht-card">
+                        <div class="hht-label">Desvio Acumulado</div>
+                        <div class="hht-value" id="days-without-caf">0</div>
+                        <div class="hht-subtitle">Desvios</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title"><i class="fas fa-chart-line"></i> Evolução do HHT Semanal (x1000)</div>
+                    <div class="hht-chart-container">
+                        <canvas id="hhtWeeklyChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="hht-table-container">
+                    <div class="chart-title"><i class="fas fa-table"></i> Tabela de Indicadores de Segurança</div>
+                    <table class="hht-table">
+                        <thead>
+                            <tr>
+                                <th>Indicador</th>
+                                <th>Semana Atual</th>
+                                <th>Acumulado</th>
+                                <th>S.01<br>14/09</th>
+                                <th>S.02<br>21/09</th>
+                                <th>S.03<br>28/09</th>
+                                <th>S.04<br>05/10</th>
+                                <th>S.05<br>12/10</th>
+                                <th>S.06<br>19/10</th>
+                                <th>S.07<br>26/10</th>
+                                <th>S.08<br>02/11</th>
+                                <th>S.09<br>09/11</th>
+                                <th>S.10<br>16/11</th>
+                                <th>S.11<br>23/11</th>
+                                <th>S.12<br>30/11</th>
+                                <th>S.13<br>07/12</th>
+                                <th>S.14<br>14/12</th>
+                                <th>S.15<br>21/12</th>
+                                <th>S.16<br>28/12</th>
+                                <th>S.17<br>04/01</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hht-table-body">
+                            <!-- Os dados serão inseridos via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="cards-container" style="margin-top: 30px;">
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Taxas de Frequência</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Taxa de Frequência (CAF e SAF)</span>
+                                <span id="freq-rate-total">0,00</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" id="freq-rate-total-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Taxa de Frequência CAF</span>
+                                <span id="freq-rate-caf">0,00</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" id="freq-rate-caf-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Taxa de Frequência SAF</span>
+                                <span id="freq-rate-saf">0,00</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" id="freq-rate-saf-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-shield-alt"></i> Estatísticas de Segurança</div>
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Acidentes sem Afastamento (SAF)</span>
+                                <span id="saf-count">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Ocorrências Simples (OSA)</span>
+                                <span id="osa-count">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Dias sem SAF</span>
+                                <span id="days-without-saf">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Ocorrências Ambientais</span>
+                                <span id="env-occurrence">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Desvios Registrados</span>
+                                <span id="deviations-count">0</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; text-align: center;">
+                            <span class="status-badge status-completed"><i class="fas fa-check-circle"></i> Sem acidentes registrados</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="s-curve">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Curva S do Projeto</h2>
+                
+                <div class="chart-container">
+                    <div class="chart-title"><i class="fas fa-project-diagram"></i> Evolução do Progresso</div>
+                    <div class="s-curve-container">
+                        <canvas id="sCurveChart"></canvas>
+                    </div>
+                    
+                    <!-- Datas abaixo das semanas -->
+                    <div class="s-curve-dates">
+                        <div class="date-item">
+                            <div class="week-label">S.01</div>
+                            <div class="date-label">14/09/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.02</div>
+                            <div class="date-label">21/09/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.03</div>
+                            <div class="date-label">28/09/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.04</div>
+                            <div class="date-label">05/10/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.05</div>
+                            <div class="date-label">12/10/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.06</div>
+                            <div class="date-label">19/10/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.07</div>
+                            <div class="date-label">26/10/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.08</div>
+                            <div class="date-label">02/11/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.09</div>
+                            <div class="date-label">09/11/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.10</div>
+                            <div class="date-label">16/11/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.11</div>
+                            <div class="date-label">23/11/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.12</div>
+                            <div class="date-label">30/11/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.13</div>
+                            <div class="date-label">07/12/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.14</div>
+                            <div class="date-label">14/12/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.15</div>
+                            <div class="date-label">21/12/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.16</div>
+                            <div class="date-label">28/12/25</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="week-label">S.17</div>
+                            <div class="date-label">04/01/26</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #3498db;"></div>
+                            <span>Progresso Previsto</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #27ae60;"></div>
+                            <span>Progresso Real</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #f39c12;"></div>
+                            <span>Forecast (Real Previsto)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="commissioning">
+                <h2 class="section-title"><i class="fas fa-cogs"></i> Atividades de Comissionamento</h2>
+                
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-fan"></i> Ventilador 1 - EC 01</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>0,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>75,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-ontrack"><i class="fas fa-clock"></i> Não atrasada</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-fan"></i> Ventilador 2 - EC 02</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>0,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>75,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-ontrack"><i class="fas fa-clock"></i> Não atrasada</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-wind"></i> Exaustor 1 - EA 01</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>0,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>75,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-ontrack"><i class="fas fa-clock"></i> Não atrasada</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-wind"></i> Exaustor 2 - EA 02</div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Previsto</span>
+                                <span>0,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill planned" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progresso Real</span>
+                                <span>25,0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill actual" style="width: 25%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-ontrack"><i class="fas fa-clock"></i> Não atrasada</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title"><i class="fas fa-chart-bar"></i> Progresso dos Testes de Comissionamento</div>
+                    <canvas id="commissioningProgressChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- NOVA ABA: Atualização de Dados via CSV -->
+            <div class="tab-content" id="data-update">
+                <h2 class="section-title"><i class="fas fa-database"></i> Atualização de Dados via CSV</h2>
+                
+                <div class="upload-section">
+                    <div class="upload-title"><i class="fas fa-file-csv"></i> 1. Dados da Visão Geral</div>
+                    <div class="upload-description">
+                        Faça upload do arquivo CSV contendo os dados atualizados da aba "Visão Geral".
+                        O arquivo deve conter os percentuais de progresso por fase do projeto.
+                    </div>
+                    
+                    <div class="csv-format">
+                        <div class="format-title">Formato Esperado:</div>
+                        <div>CSV com cabeçalhos: fase, progresso_previsto, progresso_real, status</div>
+                        <div class="format-example">
+                            fase,progresso_previsto,progresso_real,status<br>
+                            Engenharia,59.6,80.0,Não atrasada<br>
+                            Fornecimento,100.0,100.0,Concluída<br>
+                            Construção e Montagem,56.2,74.3,Não atrasada<br>
+                            Comissionamento,0.0,62.5,Não atrasada
+                        </div>
+                        <a href="#" class="download-template" onclick="downloadTemplate('visao_geral')">
+                            <i class="fas fa-download"></i> Baixar Template
+                        </a>
+                    </div>
+                    
+                    <div class="upload-area" id="uploadArea1">
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                        <div class="upload-subtext">ou</div>
+                        <button class="browse-button" onclick="document.getElementById('fileInput1').click()">Procurar Arquivo</button>
+                        <input type="file" id="fileInput1" class="file-input" accept=".csv">
+                    </div>
+                    
+                    <div id="selectedFile1" class="selected-file" style="display: none;">
+                        <div class="file-info">
+                            <i class="fas fa-file-csv file-icon"></i>
+                            <div>
+                                <div class="file-name" id="fileName1"></div>
+                                <div class="file-size" id="fileSize1"></div>
+                            </div>
+                        </div>
+                        <button class="remove-file" onclick="removeFile(1)"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <div id="csvPreview1" class="csv-preview" style="display: none;"></div>
+                    
+                    <div id="uploadStatus1" class="upload-status"></div>
+                    
+                    <div class="upload-actions">
+                        <button class="clear-button" onclick="clearSection(1)">Limpar</button>
+                        <button class="upload-button" id="uploadButton1" onclick="uploadCSV(1)" disabled>Enviar Dados</button>
+                    </div>
+                </div>
+                
+                <div class="upload-section">
+                    <div class="upload-title"><i class="fas fa-chart-line"></i> 2. Dados da Curva S</div>
+                    <div class="upload-description">
+                        Faça upload do arquivo CSV contendo os dados atualizados da aba "Curva S".
+                        O arquivo deve conter o progresso semanal previsto e real.
+                    </div>
+                    
+                    <div class="csv-format">
+                        <div class="format-title">Formato Esperado:</div>
+                        <div>CSV com cabeçalhos: semana, previsto, real</div>
+                        <div class="format-example">
+                            semana,previsto,real<br>
+                            S.01,15,14<br>
+                            S.02,21,14<br>
+                            S.03,22,14<br>
+                            ...<br>
+                            S.12,57,76.1<br>
+                            S.13,81,null<br>
+                            S.14,88,null
+                        </div>
+                        <a href="#" class="download-template" onclick="downloadTemplate('curva_s')">
+                            <i class="fas fa-download"></i> Baixar Template
+                        </a>
+                    </div>
+                    
+                    <div class="upload-area" id="uploadArea2">
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                        <div class="upload-subtext">ou</div>
+                        <button class="browse-button" onclick="document.getElementById('fileInput2').click()">Procurar Arquivo</button>
+                        <input type="file" id="fileInput2" class="file-input" accept=".csv">
+                    </div>
+                    
+                    <div id="selectedFile2" class="selected-file" style="display: none;">
+                        <div class="file-info">
+                            <i class="fas fa-file-csv file-icon"></i>
+                            <div>
+                                <div class="file-name" id="fileName2"></div>
+                                <div class="file-size" id="fileSize2"></div>
+                            </div>
+                        </div>
+                        <button class="remove-file" onclick="removeFile(2)"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <div id="csvPreview2" class="csv-preview" style="display: none;"></div>
+                    
+                    <div id="uploadStatus2" class="upload-status"></div>
+                    
+                    <div class="upload-actions">
+                        <button class="clear-button" onclick="clearSection(2)">Limpar</button>
+                        <button class="upload-button" id="uploadButton2" onclick="uploadCSV(2)" disabled>Enviar Dados</button>
+                    </div>
+                </div>
+                
+                <div class="upload-section">
+                    <div class="upload-title"><i class="fas fa-cogs"></i> 3. Dados do Comissionamento</div>
+                    <div class="upload-description">
+                        Faça upload do arquivo CSV contendo os dados atualizados da aba "Comissionamento".
+                        O arquivo deve conter o progresso dos equipamentos.
+                    </div>
+                    
+                    <div class="csv-format">
+                        <div class="format-title">Formato Esperado:</div>
+                        <div>CSV com cabeçalhos: equipamento, previsto, real</div>
+                        <div class="format-example">
+                            equipamento,previsto,real<br>
+                            Ventilador 1 - EC 01,0,75<br>
+                            Ventilador 2 - EC 02,0,75<br>
+                            Exaustor 1 - EA 01,0,75<br>
+                            Exaustor 2 - EA 02,0,25
+                        </div>
+                        <a href="#" class="download-template" onclick="downloadTemplate('comissionamento')">
+                            <i class="fas fa-download"></i> Baixar Template
+                        </a>
+                    </div>
+                    
+                    <div class="upload-area" id="uploadArea3">
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                        <div class="upload-subtext">ou</div>
+                        <button class="browse-button" onclick="document.getElementById('fileInput3').click()">Procurar Arquivo</button>
+                        <input type="file" id="fileInput3" class="file-input" accept=".csv">
+                    </div>
+                    
+                    <div id="selectedFile3" class="selected-file" style="display: none;">
+                        <div class="file-info">
+                            <i class="fas fa-file-csv file-icon"></i>
+                            <div>
+                                <div class="file-name" id="fileName3"></div>
+                                <div class="file-size" id="fileSize3"></div>
+                            </div>
+                        </div>
+                        <button class="remove-file" onclick="removeFile(3)"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <div id="csvPreview3" class="csv-preview" style="display: none;"></div>
+                    
+                    <div id="uploadStatus3" class="upload-status"></div>
+                    
+                    <div class="upload-actions">
+                        <button class="clear-button" onclick="clearSection(3)">Limpar</button>
+                        <button class="upload-button" id="uploadButton3" onclick="uploadCSV(3)" disabled>Enviar Dados</button>
+                    </div>
+                </div>
+                
+                <!-- NOVA SEÇÃO: Dados de HHT / Segurança -->
+                <div class="upload-section">
+                    <div class="upload-title"><i class="fas fa-hard-hat"></i> 4. Dados de HHT / Segurança</div>
+                    <div class="upload-description">
+                        Faça upload do arquivo CSV contendo os dados atualizados de HHT e indicadores de segurança.
+                        Use o formato do arquivo "Segurança HHT.csv".
+                    </div>
+                    
+                    <div class="csv-format">
+                        <div class="format-title">Formato Esperado:</div>
+                        <div>CSV com cabeçalhos: Descritivo;Semana Atual;Acumulado;datas...</div>
+                        <div class="format-example">
+                            Descritivo;Semana Atual;Acumulado;14/09/2025;21/09/2025;28/09/2025;05/10/2025...<br>
+                            Hht(x1000);396;2948;132;44;44;44;220;88;396;396;396;396;396;396;0;0;0;0;0;0<br>
+                            CAF - Acidentes Com Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0<br>
+                            SAF - Acidentes Sem Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0<br>
+                            ...
+                        </div>
+                        <a href="#" class="download-template" onclick="downloadTemplate('hht')">
+                            <i class="fas fa-download"></i> Baixar Template
+                        </a>
+                    </div>
+                    
+                    <div class="upload-area" id="uploadArea4">
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                        <div class="upload-subtext">ou</div>
+                        <button class="browse-button" onclick="document.getElementById('fileInput4').click()">Procurar Arquivo</button>
+                        <input type="file" id="fileInput4" class="file-input" accept=".csv">
+                    </div>
+                    
+                    <div id="selectedFile4" class="selected-file" style="display: none;">
+                        <div class="file-info">
+                            <i class="fas fa-file-csv file-icon"></i>
+                            <div>
+                                <div class="file-name" id="fileName4"></div>
+                                <div class="file-size" id="fileSize4"></div>
+                            </div>
+                        </div>
+                        <button class="remove-file" onclick="removeFile(4)"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <div id="csvPreview4" class="csv-preview" style="display: none;"></div>
+                    
+                    <div id="uploadStatus4" class="upload-status"></div>
+                    
+                    <div class="upload-actions">
+                        <button class="clear-button" onclick="clearSection(4)">Limpar</button>
+                        <button class="upload-button" id="uploadButton4" onclick="uploadCSV(4)" disabled>Enviar Dados</button>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 30px;">
+                    <div class="card-title"><i class="fas fa-sync-alt"></i> Atualizar Todos os Dados</div>
+                    <div style="margin-bottom: 20px;">
+                        Clique no botão abaixo para atualizar todos os gráficos e dados do dashboard com as informações dos arquivos CSV enviados.
+                    </div>
+                    <button class="upload-button" style="width: 100%; padding: 15px;" onclick="updateAllCharts()">
+                        <i class="fas fa-sync-alt"></i> Atualizar Todos os Gráficos
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-info">
+            <p>Dashboard de acompanhamento do projeto SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM | Atualizado em: 30/11/2025</p>
+            <p class="developer-info">Desenvolvido e editado por Fábio Mendes Rodrigues, Planejador da F.W. Company</p>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais para armazenar os gráficos e dados
+        let progressByPhaseChart, progressComparisonChart, activitiesStatusChart, sCurveChart, commissioningProgressChart, hhtWeeklyChart;
+        let csvData = {
+            overview: null,
+            sCurve: null,
+            commissioning: null,
+            hht: null  // Adicionado para armazenar dados HHT
+        };
+
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Inicializar eventos de upload
+            initializeUploadEvents();
+            
+            // Initialize charts
+            initializeCharts();
+            
+            // Carregar dados iniciais do HHT
+            loadInitialHHTData();
+        });
+        
+        function initializeUploadEvents() {
+            // Inicializar eventos de arrastar e soltar para cada área de upload
+            for (let i = 1; i <= 4; i++) { // Alterado para incluir a seção 4
+                const uploadArea = document.getElementById(`uploadArea${i}`);
+                const fileInput = document.getElementById(`fileInput${i}`);
+                const uploadButton = document.getElementById(`uploadButton${i}`);
+                
+                // Evento de clique na área de upload
+                uploadArea.addEventListener('click', function(e) {
+                    if (e.target !== this && !e.target.classList.contains('browse-button')) {
+                        return;
+                    }
+                    fileInput.click();
+                });
+                
+                // Evento de arrastar sobre a área
+                uploadArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('drag-over');
+                });
+                
+                // Evento de sair da área
+                uploadArea.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+                
+                // Evento de soltar arquivo
+                uploadArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (e.dataTransfer.files.length) {
+                        const file = e.dataTransfer.files[0];
+                        handleFileSelect(file, i);
+                    }
+                });
+                
+                // Evento de seleção de arquivo via input
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length) {
+                        const file = this.files[0];
+                        handleFileSelect(file, i);
+                    }
+                });
+                
+                // Evento de clique no botão de upload
+                uploadButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    uploadCSV(i);
+                });
+            }
+        }
+        
+        function loadInitialHHTData() {
+            // Dados iniciais do CSV fornecido
+            const hhtData = {
+                'Hht(x1000)': {
+                    'Semana Atual': '396',
+                    'Acumulado': '2948',
+                    'weekly': ['132', '44', '44', '44', '220', '88', '396', '396', '396', '396', '396', '396', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'CAF - Acidentes Com Afastamentos': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'SAF - Acidentes Sem Afastamentos': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'OSA - Ocorrência de Simples Atendimento': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'Dias sem CAF': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'Dias sem SAF': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'Ocorrência Ambiental': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'Taxa de Freq. (CAF e SAF)': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'Taxa de Freq. CAF': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'Taxa de Freq. SAF': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                },
+                'Desvios': {
+                    'Semana Atual': '0',
+                    'Acumulado': '0',
+                    'weekly': ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                }
+            };
+            
+            csvData.hht = hhtData;
+            updateHHTData(hhtData);
+        }
+        
+        function updateHHTData(hhtData) {
+            if (!hhtData) return;
+            
+            // Atualizar valores principais
+            if (hhtData['Hht(x1000)']) {
+                document.getElementById('hht-current').textContent = hhtData['Hht(x1000)']['Semana Atual'];
+                document.getElementById('hht-accumulated').textContent = hhtData['Hht(x1000)']['Acumulado'];
+            }
+            
+            if (hhtData['CAF - Acidentes Com Afastamentos']) {
+                document.getElementById('caf-count').textContent = hhtData['CAF - Acidentes Com Afastamentos']['Acumulado'];
+                document.getElementById('days-without-caf').textContent = hhtData['Dias sem CAF'] ? hhtData['Dias sem CAF']['Semana Atual'] : '0';
+            }
+            
+            if (hhtData['SAF - Acidentes Sem Afastamentos']) {
+                document.getElementById('saf-count').textContent = hhtData['SAF - Acidentes Sem Afastamentos']['Acumulado'];
+            }
+            
+            if (hhtData['Dias sem SAF']) {
+                document.getElementById('days-without-saf').textContent = hhtData['Dias sem SAF']['Semana Atual'];
+            }
+            
+            if (hhtData['OSA - Ocorrência de Simples Atendimento']) {
+                document.getElementById('osa-count').textContent = hhtData['OSA - Ocorrência de Simples Atendimento']['Acumulado'];
+            }
+            
+            if (hhtData['Ocorrência Ambiental']) {
+                document.getElementById('env-occurrence').textContent = hhtData['Ocorrência Ambiental']['Acumulado'];
+            }
+            
+            if (hhtData['Desvios']) {
+                document.getElementById('deviations-count').textContent = hhtData['Desvios']['Acumulado'];
+            }
+            
+            // Atualizar taxas de frequência
+            if (hhtData['Taxa de Freq. (CAF e SAF)']) {
+                document.getElementById('freq-rate-total').textContent = hhtData['Taxa de Freq. (CAF e SAF)']['Semana Atual'];
+                updateProgressBar('freq-rate-total-bar', hhtData['Taxa de Freq. (CAF e SAF)']['Semana Atual']);
+            }
+            
+            if (hhtData['Taxa de Freq. CAF']) {
+                document.getElementById('freq-rate-caf').textContent = hhtData['Taxa de Freq. CAF']['Semana Atual'];
+                updateProgressBar('freq-rate-caf-bar', hhtData['Taxa de Freq. CAF']['Semana Atual']);
+            }
+            
+            if (hhtData['Taxa de Freq. SAF']) {
+                document.getElementById('freq-rate-saf').textContent = hhtData['Taxa de Freq. SAF']['Semana Atual'];
+                updateProgressBar('freq-rate-saf-bar', hhtData['Taxa de Freq. SAF']['Semana Atual']);
+            }
+            
+            // Atualizar tabela
+            updateHHTTable(hhtData);
+            
+            // Atualizar gráfico
+            updateHHTChart(hhtData);
+        }
+        
+        function updateProgressBar(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                const numValue = parseFloat(value) || 0;
+                // Normalizar para máximo de 100%
+                const normalizedValue = Math.min(numValue, 100);
+                element.style.width = `${normalizedValue}%`;
+                
+                // Mudar cor baseado no valor
+                if (numValue === 0) {
+                    element.style.backgroundColor = '#27ae60'; // Verde para 0
+                } else if (numValue <= 5) {
+                    element.style.backgroundColor = '#f39c12'; // Amarelo para baixo
+                } else {
+                    element.style.backgroundColor = '#e74c3c'; // Vermelho para alto
+                }
+            }
+        }
+        
+        function updateHHTTable(hhtData) {
+            const tableBody = document.getElementById('hht-table-body');
+            if (!tableBody) return;
+            
+            // Limpar tabela
+            tableBody.innerHTML = '';
+            
+            // Definir a ordem das linhas
+            const rowOrder = [
+                'Hht(x1000)',
+                'CAF - Acidentes Com Afastamentos',
+                'SAF - Acidentes Sem Afastamentos',
+                'OSA - Ocorrência de Simples Atendimento',
+                'Dias sem CAF',
+                'Dias sem SAF',
+                'Ocorrência Ambiental',
+                'Taxa de Freq. (CAF e SAF)',
+                'Taxa de Freq. CAF',
+                'Taxa de Freq. SAF',
+                'Desvios'
+            ];
+            
+            // Adicionar linhas na ordem definida
+            rowOrder.forEach(rowKey => {
+                if (hhtData[rowKey]) {
+                    const rowData = hhtData[rowKey];
+                    const row = document.createElement('tr');
+                    
+                    // Célula do indicador
+                    const indicatorCell = document.createElement('td');
+                    indicatorCell.textContent = rowKey;
+                    row.appendChild(indicatorCell);
+                    
+                    // Célula da semana atual
+                    const currentCell = document.createElement('td');
+                    currentCell.textContent = rowData['Semana Atual'];
+                    currentCell.className = 'hht-value-cell';
+                    row.appendChild(currentCell);
+                    
+                    // Célula acumulado
+                    const accumCell = document.createElement('td');
+                    accumCell.textContent = rowData['Acumulado'];
+                    accumCell.className = 'hht-value-cell';
+                    row.appendChild(accumCell);
+                    
+                    // Células semanais (apenas as primeiras 17 semanas para o gráfico)
+                    const weeklyData = rowData['weekly'] || [];
+                    for (let i = 0; i < 17; i++) {
+                        const weekCell = document.createElement('td');
+                        weekCell.textContent = weeklyData[i] || '0';
+                        
+                        // Aplicar classes CSS baseadas no valor
+                        const value = parseFloat(weeklyData[i]) || 0;
+                        if (value === 0) {
+                            weekCell.className = 'zero-value';
+                        } else if (value > 0) {
+                            weekCell.className = 'positive-value';
+                        }
+                        
+                        // Destacar semana atual (S.12)
+                        if (i === 11) { // S.12 é o índice 11 (0-based)
+                            weekCell.classList.add('current-week');
+                        }
+                        
+                        row.appendChild(weekCell);
+                    }
+                    
+                    tableBody.appendChild(row);
+                }
+            });
+        }
+        
+        function updateHHTChart(hhtData) {
+            if (!hhtWeeklyChart) {
+                // Inicializar gráfico se não existir
+                const hhtCtx = document.getElementById('hhtWeeklyChart').getContext('2d');
+                hhtWeeklyChart = new Chart(hhtCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['S.01', 'S.02', 'S.03', 'S.04', 'S.05', 'S.06', 'S.07', 'S.08', 'S.09', 'S.10', 'S.11', 'S.12', 'S.13', 'S.14', 'S.15', 'S.16', 'S.17'],
+                        datasets: [{
+                            label: 'HHT Semanal (x1000)',
+                            data: [],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Homens-Hora (x1000)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Atualizar dados do gráfico
+            if (hhtData['Hht(x1000)'] && hhtData['Hht(x1000)']['weekly']) {
+                const weeklyData = hhtData['Hht(x1000)']['weekly'].slice(0, 17).map(val => parseFloat(val) || 0);
+                hhtWeeklyChart.data.datasets[0].data = weeklyData;
+                hhtWeeklyChart.update();
+            }
+        }
+        
+        function initializeCharts() {
+            // Progress by Phase Chart
+            const progressByPhaseCtx = document.getElementById('progressByPhaseChart').getContext('2d');
+            progressByPhaseChart = new Chart(progressByPhaseCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Engenharia', 'Fornecimento', 'Construção e Montagem', 'Comissionamento', 'Operação e Encerramento'],
+                    datasets: [
+                        {
+                            label: 'Progresso Previsto',
+                            data: [59.6, 100, 56.2, 0, 0],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Progresso Real',
+                            data: [80.0, 100, 74.3, 62.5, 0],
+                            backgroundColor: '#27ae60',
+                            borderColor: '#219653',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Percentual (%)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Progress Comparison Chart
+            const progressComparisonCtx = document.getElementById('progressComparisonChart').getContext('2d');
+            progressComparisonChart = new Chart(progressComparisonCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Engenharia', 'Fornecimento', 'Construção', 'Comissionamento', 'Encerramento'],
+                    datasets: [
+                        {
+                            label: 'Progresso Previsto',
+                            data: [59.6, 100, 56.2, 0, 0],
+                            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                            borderColor: '#3498db',
+                            pointBackgroundColor: '#3498db',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#3498db'
+                        },
+                        {
+                            label: 'Progresso Real',
+                            data: [80.0, 100, 74.3, 62.5, 0],
+                            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+                            borderColor: '#27ae60',
+                            pointBackgroundColor: '#27ae60',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#27ae60'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+            
+            // Activities Status Chart
+            const activitiesStatusCtx = document.getElementById('activitiesStatusChart').getContext('2d');
+            activitiesStatusChart = new Chart(activitiesStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Concluídas', 'Não Atrasadas', 'Atrasadas'],
+                    datasets: [{
+                        data: [1, 5, 0],
+                        backgroundColor: [
+                            '#27ae60',
+                            '#3498db',
+                            '#e74c3c'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // S-Curve Chart
+            const sCurveCtx = document.getElementById('sCurveChart').getContext('2d');
+            sCurveChart = new Chart(sCurveCtx, {
+                type: 'line',
+                data: {
+                    labels: ['S.01', 'S.02', 'S.03', 'S.04', 'S.05', 'S.06', 'S.07', 'S.08', 'S.09', 'S.10', 'S.11', 'S.12', 'S.13', 'S.14', 'S.15', 'S.16', 'S.17'],
+                    datasets: [
+                        {
+                            label: 'Progresso Previsto',
+                            data: [15, 21, 22, 23, 25, 28, 32, 32, 35, 42, 47, 57, 81, 88, 97, 98, 100],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            tension: 0.4,
+                            fill: false,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Progresso Real',
+                            data: [14, 14, 14, 14, 14, 27, 43, 55, 68, 76, 76.1, 76.1, null, null, null, null, null],
+                            borderColor: '#27ae60',
+                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                            tension: 0.4,
+                            fill: false,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Forecast',
+                            data: [null, null, null, null, null, null, null, null, null, null, null, 76, 90, 95, 98, 99, 100],
+                            borderColor: '#f39c12',
+                            backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                            tension: 0.4,
+                            fill: false,
+                            borderWidth: 2,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Progresso (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Semanas do Projeto'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Commissioning Progress Chart
+            const commissioningProgressCtx = document.getElementById('commissioningProgressChart').getContext('2d');
+            commissioningProgressChart = new Chart(commissioningProgressCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ventilador 1', 'Ventilador 2', 'Exaustor 1', 'Exaustor 2'],
+                    datasets: [
+                        {
+                            label: 'Progresso Previsto',
+                            data: [0, 0, 0, 0],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Progresso Real',
+                            data: [75, 75, 75, 25],
+                            backgroundColor: '#27ae60',
+                            borderColor: '#219653',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Percentual (%)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Inicializar gráfico HHT
+            const hhtCtx = document.getElementById('hhtWeeklyChart')?.getContext('2d');
+            if (hhtCtx) {
+                hhtWeeklyChart = new Chart(hhtCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['S.01', 'S.02', 'S.03', 'S.04', 'S.05', 'S.06', 'S.07', 'S.08', 'S.09', 'S.10', 'S.11', 'S.12', 'S.13', 'S.14', 'S.15', 'S.16', 'S.17'],
+                        datasets: [{
+                            label: 'HHT Semanal (x1000)',
+                            data: [132, 44, 44, 44, 220, 88, 396, 396, 396, 396, 396, 396, 0, 0, 0, 0, 0],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Homens-Hora (x1000)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Funções para upload de CSV
+        function handleFileSelect(file, sectionNumber) {
+            // Verificar se é um arquivo CSV
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                showStatus(sectionNumber, 'Por favor, selecione um arquivo CSV.', 'error');
+                return;
+            }
+            
+            // Atualizar interface com informações do arquivo
+            const fileName = document.getElementById(`fileName${sectionNumber}`);
+            const fileSize = document.getElementById(`fileSize${sectionNumber}`);
+            const selectedFileDiv = document.getElementById(`selectedFile${sectionNumber}`);
+            const uploadButton = document.getElementById(`uploadButton${sectionNumber}`);
+            
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            selectedFileDiv.style.display = 'flex';
+            uploadButton.disabled = false;
+            
+            // Armazenar o arquivo em um data attribute para uso posterior
+            selectedFileDiv.dataset.file = file.name;
+            
+            // Ler e pré-visualizar o CSV
+            readCSV(file, sectionNumber);
+        }
+        
+        function readCSV(file, sectionNumber) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csvContent = e.target.result;
+                previewCSV(csvContent, sectionNumber);
+            };
+            reader.readAsText(file);
+        }
+        
+        function previewCSV(csvContent, sectionNumber) {
+            const lines = csvContent.split('\n');
+            const previewDiv = document.getElementById(`csvPreview${sectionNumber}`);
+            
+            if (lines.length === 0) {
+                previewDiv.innerHTML = '<p>Arquivo CSV vazio.</p>';
+                return;
+            }
+            
+            // Criar tabela HTML
+            let tableHTML = '<table class="csv-table">';
+            
+            // Processar cabeçalhos
+            const headers = lines[0].split(',');
+            // Para HHT, usar separador ponto e vírgula
+            if (sectionNumber === 4) {
+                headers = lines[0].split(';');
+            }
+            
+            tableHTML += '<thead><tr>';
+            headers.forEach(header => {
+                tableHTML += `<th>${header.trim()}</th>`;
+            });
+            tableHTML += '</tr></thead>';
+            
+            // Processar linhas de dados (limitar a 10 linhas para pré-visualização)
+            tableHTML += '<tbody>';
+            const maxRows = Math.min(10, lines.length - 1);
+            for (let i = 1; i <= maxRows; i++) {
+                if (lines[i].trim() === '') continue;
+                
+                let cells;
+                if (sectionNumber === 4) {
+                    cells = lines[i].split(';');
+                } else {
+                    cells = lines[i].split(',');
+                }
+                
+                tableHTML += '<tr>';
+                cells.forEach(cell => {
+                    tableHTML += `<td>${cell.trim()}</td>`;
+                });
+                tableHTML += '</tr>';
+            }
+            tableHTML += '</tbody></table>';
+            
+            if (lines.length - 1 > maxRows) {
+                tableHTML += `<p style="padding: 10px; text-align: center; color: var(--gray-color);">
+                    ... e mais ${lines.length - 1 - maxRows} linhas
+                </p>`;
+            }
+            
+            previewDiv.innerHTML = tableHTML;
+            previewDiv.style.display = 'block';
+        }
+        
+        function uploadCSV(sectionNumber) {
+            const fileInput = document.getElementById(`fileInput${sectionNumber}`);
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showStatus(sectionNumber, 'Nenhum arquivo selecionado.', 'error');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const csvContent = e.target.result;
+                    let data;
+                    
+                    // Determinar qual seção estamos processando
+                    let sectionType;
+                    if (sectionNumber === 1) sectionType = 'overview';
+                    else if (sectionNumber === 2) sectionType = 'sCurve';
+                    else if (sectionNumber === 3) sectionType = 'commissioning';
+                    else if (sectionNumber === 4) sectionType = 'hht';
+                    
+                    // Processar dados HHT de forma diferente
+                    if (sectionType === 'hht') {
+                        data = parseHHTCSV(csvContent);
+                    } else {
+                        data = parseCSV(csvContent);
+                    }
+                    
+                    // Armazenar os dados na variável global correspondente
+                    csvData[sectionType] = data;
+                    
+                    showStatus(sectionNumber, `Dados carregados com sucesso!`, 'success');
+                    
+                    // Habilitar o botão de atualizar todos os gráficos se todos os dados estiverem carregados
+                    checkAllDataLoaded();
+                    
+                } catch (error) {
+                    showStatus(sectionNumber, `Erro ao processar o arquivo: ${error.message}`, 'error');
+                }
+            };
+            
+            reader.onerror = function() {
+                showStatus(sectionNumber, 'Erro ao ler o arquivo.', 'error');
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        function parseCSV(csvContent) {
+            const lines = csvContent.split('\n').filter(line => line.trim() !== '');
+            
+            if (lines.length < 2) {
+                throw new Error('Arquivo CSV deve ter pelo menos uma linha de cabeçalho e uma linha de dados');
+            }
+            
+            const headers = lines[0].split(',').map(h => h.trim());
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                const row = {};
+                
+                headers.forEach((header, index) => {
+                    if (index < values.length) {
+                        // Converter para número se possível
+                        const value = values[index].trim();
+                        row[header] = value === 'null' || value === '' ? null : (isNaN(value) ? value : parseFloat(value));
+                    } else {
+                        row[header] = '';
+                    }
+                });
+                
+                data.push(row);
+            }
+            
+            return data;
+        }
+        
+        function parseHHTCSV(csvContent) {
+            const lines = csvContent.split('\n').filter(line => line.trim() !== '');
+            
+            if (lines.length < 2) {
+                throw new Error('Arquivo CSV deve ter pelo menos uma linha de cabeçalho e uma linha de dados');
+            }
+            
+            // Processar cabeçalho com separador ponto e vírgula
+            const headers = lines[0].split(';').map(h => h.trim());
+            
+            // Verificar se temos o formato correto
+            if (headers.length < 3) {
+                throw new Error('Formato de CSV inválido para dados HHT. Esperado: Descritivo;Semana Atual;Acumulado;datas...');
+            }
+            
+            const hhtData = {};
+            
+            // Processar cada linha de dados
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(';');
+                const descritivo = values[0].trim();
+                
+                if (descritivo) {
+                    hhtData[descritivo] = {
+                        'Semana Atual': values[1] ? values[1].trim() : '0',
+                        'Acumulado': values[2] ? values[2].trim() : '0',
+                        'weekly': values.slice(3).map(val => val ? val.trim() : '0')
+                    };
+                }
+            }
+            
+            return hhtData;
+        }
+        
+        function updateAllCharts() {
+            // Verificar se todos os dados foram carregados
+            if (!csvData.overview || !csvData.sCurve || !csvData.commissioning || !csvData.hht) {
+                alert('Por favor, carregue todos os arquivos CSV antes de atualizar os gráficos.');
+                return;
+            }
+            
+            try {
+                // Atualizar dados da Visão Geral
+                if (csvData.overview) {
+                    updateOverviewData(csvData.overview);
+                }
+                
+                // Atualizar dados da Curva S
+                if (csvData.sCurve) {
+                    updateSCurveData(csvData.sCurve);
+                }
+                
+                // Atualizar dados do Comissionamento
+                if (csvData.commissioning) {
+                    updateCommissioningData(csvData.commissioning);
+                }
+                
+                // Atualizar dados HHT
+                if (csvData.hht) {
+                    updateHHTData(csvData.hht);
+                }
+                
+                // Atualizar gráfico de Progresso Detalhado
+                updateProgressChart();
+                
+                alert('✅ Todos os gráficos foram atualizados com sucesso!');
+                
+            } catch (error) {
+                alert(`❌ Erro ao atualizar gráficos: ${error.message}`);
+            }
+        }
+        
+        function updateOverviewData(data) {
+            // Atualizar métricas gerais
+            const validData = data.filter(row => row.progresso_previsto !== null && row.progresso_real !== null);
+            const totalPlanned = validData.reduce((sum, row) => sum + (row.progresso_previsto || 0), 0) / validData.length;
+            const totalActual = validData.reduce((sum, row) => sum + (row.progresso_real || 0), 0) / validData.length;
+            
+            // Atualizar métricas na interface
+            const metricElements = document.querySelectorAll('.metric-card .metric-value');
+            if (metricElements.length >= 2) {
+                metricElements[0].textContent = `${totalPlanned.toFixed(1)}%`;
+                metricElements[1].textContent = `${totalActual.toFixed(1)}%`;
+            }
+            
+            // Atualizar cards individuais
+            const phaseMapping = {
+                'Engenharia': 0,
+                'Fornecimento': 1,
+                'Construção e Montagem': 2,
+                'Comissionamento': 3
+            };
+            
+            const chartDataPlanned = [];
+            const chartDataActual = [];
+            
+            data.forEach(row => {
+                const phaseIndex = phaseMapping[row.fase];
+                if (phaseIndex !== undefined) {
+                    const cards = document.querySelectorAll('#overview .card');
+                    if (cards[phaseIndex]) {
+                        const card = cards[phaseIndex];
+                        
+                        // Atualizar progresso previsto
+                        const plannedProgress = card.querySelectorAll('.progress-container')[0];
+                        if (plannedProgress) {
+                            plannedProgress.querySelector('span:nth-child(2)').textContent = `${row.progresso_previsto.toFixed(1)}%`;
+                            plannedProgress.querySelector('.progress-fill').style.width = `${row.progresso_previsto}%`;
+                        }
+                        
+                        // Atualizar progresso real
+                        const actualProgress = card.querySelectorAll('.progress-container')[1];
+                        if (actualProgress) {
+                            actualProgress.querySelector('span:nth-child(2)').textContent = `${row.progresso_real.toFixed(1)}%`;
+                            actualProgress.querySelector('.progress-fill').style.width = `${row.progresso_real}%`;
+                        }
+                        
+                        // Atualizar status
+                        const statusBadge = card.querySelector('.status-badge');
+                        if (statusBadge) {
+                            statusBadge.className = 'status-badge ' + getStatusClass(row.status);
+                            statusBadge.innerHTML = `<i class="fas ${getStatusIcon(row.status)}"></i> ${row.status}`;
+                        }
+                    }
+                    
+                    // Coletar dados para o gráfico
+                    chartDataPlanned[phaseIndex] = row.progresso_previsto;
+                    chartDataActual[phaseIndex] = row.progresso_real;
+                }
+            });
+            
+            // Completar dados para o gráfico (caso falte alguma fase)
+            for (let i = 0; i < 5; i++) {
+                if (chartDataPlanned[i] === undefined) chartDataPlanned[i] = 0;
+                if (chartDataActual[i] === undefined) chartDataActual[i] = 0;
+            }
+            
+            // Atualizar gráfico de barras
+            progressByPhaseChart.data.datasets[0].data = chartDataPlanned;
+            progressByPhaseChart.data.datasets[1].data = chartDataActual;
+            progressByPhaseChart.update();
+            
+            // Atualizar gráfico de radar
+            const radarData = [
+                data.find(d => d.fase === 'Engenharia')?.progresso_real || 0,
+                data.find(d => d.fase === 'Fornecimento')?.progresso_real || 0,
+                data.find(d => d.fase === 'Construção e Montagem')?.progresso_real || 0,
+                data.find(d => d.fase === 'Comissionamento')?.progresso_real || 0,
+                0 // Encerramento
+            ];
+            
+            progressComparisonChart.data.datasets[1].data = radarData;
+            progressComparisonChart.update();
+        }
+        
+        function updateSCurveData(data) {
+            // Ordenar por semana
+            data.sort((a, b) => {
+                const weekA = parseInt(a.semana?.replace('S.', '') || 0);
+                const weekB = parseInt(b.semana?.replace('S.', '') || 0);
+                return weekA - weekB;
+            });
+            
+            // Extrair dados para o gráfico
+            const weeks = data.map(row => row.semana);
+            const planned = data.map(row => row.previsto || 0);
+            const actual = data.map(row => row.real !== null ? row.real : null);
+            
+            // Garantir que temos 17 semanas
+            while (planned.length < 17) planned.push(0);
+            while (actual.length < 17) actual.push(null);
+            
+            // Atualizar gráfico Curva S
+            sCurveChart.data.datasets[0].data = planned;
+            sCurveChart.data.datasets[1].data = actual;
+            
+            // Calcular forecast baseado nos dados reais
+            const forecast = calculateForecast(actual);
+            sCurveChart.data.datasets[2].data = forecast;
+            
+            sCurveChart.update();
+        }
+        
+        function calculateForecast(actualData) {
+            const forecast = [...actualData];
+            const lastActualIndex = actualData.findLastIndex(val => val !== null);
+            
+            if (lastActualIndex >= 0 && lastActualIndex < actualData.length - 1) {
+                const lastActualValue = actualData[lastActualIndex];
+                const remainingWeeks = actualData.length - lastActualIndex - 1;
+                
+                if (remainingWeeks > 0) {
+                    // Calcular incremento semanal restante para atingir 100%
+                    const weeklyIncrement = (100 - lastActualValue) / remainingWeeks;
+                    
+                    for (let i = lastActualIndex + 1; i < actualData.length; i++) {
+                        forecast[i] = Math.min(100, lastActualValue + (weeklyIncrement * (i - lastActualIndex)));
+                    }
+                }
+            }
+            
+            return forecast;
+        }
+        
+        function updateCommissioningData(data) {
+            const chartDataPlanned = [];
+            const chartDataActual = [];
+            const labels = [];
+            
+            // Atualizar cards de comissionamento
+            data.forEach((row, index) => {
+                if (index < 4) {
+                    const cards = document.querySelectorAll('#commissioning .card');
+                    if (cards[index]) {
+                        const card = cards[index];
+                        
+                        // Atualizar título se necessário
+                        if (row.equipamento) {
+                            const titleElement = card.querySelector('.card-title');
+                            if (titleElement) {
+                                titleElement.innerHTML = `<i class="fas ${getEquipmentIcon(row.equipamento)}"></i> ${row.equipamento}`;
+                            }
+                        }
+                        
+                        // Atualizar progresso previsto
+                        const plannedProgress = card.querySelectorAll('.progress-container')[0];
+                        if (plannedProgress) {
+                            plannedProgress.querySelector('span:nth-child(2)').textContent = `${row.previsto.toFixed(1)}%`;
+                            plannedProgress.querySelector('.progress-fill').style.width = `${row.previsto}%`;
+                        }
+                        
+                        // Atualizar progresso real
+                        const actualProgress = card.querySelectorAll('.progress-container')[1];
+                        if (actualProgress) {
+                            actualProgress.querySelector('span:nth-child(2)').textContent = `${row.real.toFixed(1)}%`;
+                            actualProgress.querySelector('.progress-fill').style.width = `${row.real}%`;
+                        }
+                    }
+                    
+                    // Coletar dados para o gráfico
+                    chartDataPlanned[index] = row.previsto;
+                    chartDataActual[index] = row.real;
+                    
+                    // Atualizar labels do gráfico
+                    if (row.equipamento) {
+                        const shortName = row.equipamento.split(' - ')[0];
+                        labels[index] = shortName;
+                    } else {
+                        labels[index] = `Equipamento ${index + 1}`;
+                    }
+                }
+            });
+            
+            // Garantir que temos 4 equipamentos
+            while (chartDataPlanned.length < 4) chartDataPlanned.push(0);
+            while (chartDataActual.length < 4) chartDataActual.push(0);
+            while (labels.length < 4) labels.push(`Equipamento ${labels.length + 1}`);
+            
+            // Atualizar gráfico de comissionamento
+            commissioningProgressChart.data.labels = labels;
+            commissioningProgressChart.data.datasets[0].data = chartDataPlanned;
+            commissioningProgressChart.data.datasets[1].data = chartDataActual;
+            commissioningProgressChart.update();
+        }
+        
+        function updateProgressChart() {
+            // Recalcular status das atividades
+            const completed = csvData.overview?.filter(row => row.status?.includes('Concluída')).length || 1;
+            const delayed = csvData.overview?.filter(row => row.status?.includes('Atrasada')).length || 0;
+            const onTrack = (csvData.overview?.length || 6) - completed - delayed;
+            
+            activitiesStatusChart.data.datasets[0].data = [completed, onTrack, delayed];
+            activitiesStatusChart.update();
+        }
+        
+        function checkAllDataLoaded() {
+            // Verificar se todos os dados estão carregados
+            const allLoaded = csvData.overview && csvData.sCurve && csvData.commissioning && csvData.hht;
+            console.log('Dados carregados:', {
+                overview: csvData.overview ? `Sim (${csvData.overview.length} linhas)` : 'Não',
+                sCurve: csvData.sCurve ? `Sim (${csvData.sCurve.length} linhas)` : 'Não',
+                commissioning: csvData.commissioning ? `Sim (${csvData.commissioning.length} linhas)` : 'Não',
+                hht: csvData.hht ? 'Sim' : 'Não'
+            });
+        }
+        
+        // Funções auxiliares
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function showStatus(sectionNumber, message, type) {
+            const statusDiv = document.getElementById(`uploadStatus${sectionNumber}`);
+            statusDiv.textContent = message;
+            statusDiv.className = `upload-status ${type}`;
+            statusDiv.style.display = 'block';
+            
+            // Remover mensagem após 5 segundos
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        function removeFile(sectionNumber) {
+            const fileInput = document.getElementById(`fileInput${sectionNumber}`);
+            const selectedFileDiv = document.getElementById(`selectedFile${sectionNumber}`);
+            const uploadButton = document.getElementById(`uploadButton${sectionNumber}`);
+            const previewDiv = document.getElementById(`csvPreview${sectionNumber}`);
+            const statusDiv = document.getElementById(`uploadStatus${sectionNumber}`);
+            
+            fileInput.value = '';
+            selectedFileDiv.style.display = 'none';
+            uploadButton.disabled = true;
+            previewDiv.style.display = 'none';
+            statusDiv.style.display = 'none';
+            
+            // Remover dados correspondentes
+            if (sectionNumber === 1) csvData.overview = null;
+            else if (sectionNumber === 2) csvData.sCurve = null;
+            else if (sectionNumber === 3) csvData.commissioning = null;
+            else if (sectionNumber === 4) csvData.hht = null;
+        }
+        
+        function clearSection(sectionNumber) {
+            removeFile(sectionNumber);
+        }
+        
+        function getStatusClass(status) {
+            if (!status) return 'status-ontrack';
+            if (status.includes('Concluída')) return 'status-completed';
+            if (status.includes('Atrasada')) return 'status-delayed';
+            return 'status-ontrack';
+        }
+        
+        function getStatusIcon(status) {
+            if (!status) return 'fa-clock';
+            if (status.includes('Concluída')) return 'fa-check-circle';
+            if (status.includes('Atrasada')) return 'fa-exclamation-triangle';
+            return 'fa-clock';
+        }
+        
+        function getEquipmentIcon(equipment) {
+            if (!equipment) return 'fa-cog';
+            if (equipment.includes('Ventilador')) return 'fa-fan';
+            if (equipment.includes('Exaustor')) return 'fa-wind';
+            return 'fa-cog';
+        }
+        
+        function downloadTemplate(type) {
+            let csvContent = '';
+            let filename = '';
+            
+            switch(type) {
+                case 'visao_geral':
+                    csvContent = 'fase,progresso_previsto,progresso_real,status\nEngenharia,59.6,80.0,Não atrasada\nFornecimento,100.0,100.0,Concluída\nConstrução e Montagem,56.2,74.3,Não atrasada\nComissionamento,0.0,62.5,Não atrasada';
+                    filename = 'template_visao_geral.csv';
+                    break;
+                case 'curva_s':
+                    csvContent = 'semana,previsto,real\nS.01,15,14\nS.02,21,14\nS.03,22,14\nS.04,23,14\nS.05,25,14\nS.06,28,27\nS.07,32,43\nS.08,32,55\nS.09,35,68\nS.10,42,76\nS.11,47,76.1\nS.12,57,76.1\nS.13,81,null\nS.14,88,null\nS.15,97,null\nS.16,98,null\nS.17,100,null';
+                    filename = 'template_curva_s.csv';
+                    break;
+                case 'comissionamento':
+                    csvContent = 'equipamento,previsto,real\nVentilador 1 - EC 01,0,75\nVentilador 2 - EC 02,0,75\nExaustor 1 - EA 01,0,75\nExaustor 2 - EA 02,0,25';
+                    filename = 'template_comissionamento.csv';
+                    break;
+                case 'hht':
+                    // Template para dados HHT no formato do CSV fornecido
+                    csvContent = 'Descritivo;Semana Atual;Acumulado;14/09/2025;21/09/2025;28/09/2025;05/10/2025;12/10/2025;19/10/2025;26/10/2025;02/11/2025;09/11/2025;16/11/2025;23/11/2025;30/11/2025;07/12/2025;14/12/2025;21/12/2025;28/12/2025;04/01/2026;11/01/2026\nHht(x1000);396;2948;132;44;44;44;220;88;396;396;396;396;396;396;0;0;0;0;0;0\nCAF - Acidentes Com Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nSAF - Acidentes Sem Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nOSA - Ocorrência de Simples Atendimento;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nDias sem CAF;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nDias sem SAF;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nOcorrência Ambiental;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nTaxa de Freq. (CAF e SAF);0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nTaxa de Freq. CAF;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nTaxa de Freq. SAF;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0\nDesvios;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0';
+                    filename = 'template_hht_seguranca.csv';
+                    break;
+            }
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
