@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
@@ -39,7 +40,7 @@
             padding: 20px;
         }
         
-        .dashboard-header {
+                .dashboard-header {
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             border-radius: 12px;
             padding: 25px;
@@ -47,11 +48,15 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* MODIFICADO: de "center" para "flex-start" */
             color: white;
             position: relative;
             overflow: hidden;
         }
+        .project-title {
+            margin-bottom: 5px; /* Reduz espaço abaixo */
+            padding-top: 0; /* Remove padding superior se houver */
+        }  
         
         .dashboard-header::before {
             content: '';
@@ -65,14 +70,14 @@
         }
         
         .project-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             position: relative;
             z-index: 1;
         }
         
         .project-subtitle {
-            font-size: 16px;
+            font-size: 17px;
             opacity: 0.9;
             margin-top: 5px;
             position: relative;
@@ -101,12 +106,164 @@
             font-weight: 700;
         }
         
+       /* Seletor de Semana no cabeçalho - Versão centralizada */
+.week-selector-header {
+    position: absolute;
+    bottom: -5px; /* Apenas um pouco abaixo */
+    left: 20%;
+    transform: translateX(-50%);
+    background: transparent;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    min-width: 400px;
+    max-width: 500px;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.week-selector-label {
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    font-size: 12px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.week-dropdown-header {
+    display: flex;
+    align-items: center;
+}
+
+.week-dropdown-header select {
+    padding: 5px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    min-width: 130px;
+    font-size: 11px;
+    height: 28px;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.current-week-indicator-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 8px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    font-weight: 600;
+    color: white;
+    font-size: 11px;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Botão Atualizar no cabeçalho - CENTRALIZADO */
+.update-button-header {
+    padding: 5px 12px;
+    background-color: rgba(39, 174, 96, 0.8);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    height: 28px;
+}
+
+.update-button-header:hover {
+    background-color: rgba(39, 174, 96, 0.9);
+    transform: translateY(-1px);
+}
+
+/* Ajustes para responsividade */
+@media (max-width: 768px) {
+    .week-selector-header {
+        min-width: 90%;
+        max-width: 90%;
+        padding: 6px 12px;
+        gap: 8px;
+        bottom: -18px;
+        flex-wrap: wrap;
+    }
+    
+    .week-selector-label {
+        font-size: 11px;
+    }
+    
+    .week-dropdown-header select {
+        min-width: 110px;
+        font-size: 10px;
+        height: 26px;
+        padding: 4px 6px;
+    }
+    
+    .current-week-indicator-header {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+    
+    .update-button-header {
+        font-size: 10px;
+        padding: 4px 10px;
+        height: 26px;
+    }
+}
+
+@media (max-width: 480px) {
+    .week-selector-header {
+        padding: 5px 10px;
+        gap: 6px;
+        bottom: -15px;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .week-selector-label {
+        font-size: 10px;
+    }
+    
+    .week-dropdown-header select {
+        min-width: 100px;
+        font-size: 9px;
+        height: 24px;
+    }
+    
+    .current-week-indicator-header {
+        font-size: 9px;
+        padding: 3px 5px;
+    }
+    
+    .update-button-header {
+        font-size: 9px;
+        padding: 3px 8px;
+        height: 24px;
+    }
+}
+        
+        .update-button-header:hover {
+            background-color: #219653;
+            transform: translateY(-1px);
+        }
+        
         .tabs-container {
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 25px;
             overflow: hidden;
+            margin-top: 15px;
         }
         
         .tabs-header {
@@ -1082,6 +1239,13 @@
             color: var(--primary-color);
         }
         
+        /* Layout 2x2 para a aba de upload */
+        .upload-sections-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
         /* Ajustes para responsividade */
         @media (max-width: 768px) {
             .dashboard-header {
@@ -1145,21 +1309,77 @@
                 padding-left: 8px;
                 min-width: 150px;
             }
+            
+            .week-selector-header {
+                min-width: 90%;
+                max-width: 90%;
+                padding: 12px 15px;
+                gap: 10px;
+            }
+            
+            .week-selector-label {
+                font-size: 12px;
+            }
+            
+            .week-button-header {
+                padding: 5px 8px;
+                font-size: 11px;
+                min-width: 40px;
+            }
+            
+            .week-dropdown-header select {
+                min-width: 100px;
+                font-size: 11px;
+            }
+            
+            .current-week-indicator-header {
+                font-size: 11px;
+                padding: 5px 8px;
+            }
+            
+            .update-button-header {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+            
+            .upload-sections-grid {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-header {
+    align-items: flex-start !important; /* Alinha ao topo */
+    padding-top: 15px !important; /* Adiciona espaço no topo */
+}
+
+.project-title {
+    margin-bottom: 5px !important; /* Reduz espaço abaixo do título */
+    line-height: 1.2 !important; /* Ajusta altura da linha */
+}
+
+.project-subtitle {
+    margin-top: 0 !important; /* Remove espaço acima do subtítulo */
+}
+
+/* Se quiser subir também a seção de informações */
+.project-info {
+    margin-top: 5px !important; /* Ajusta posição vertical */
+}
+
         }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <div style="display: flex; align-items: center; gap: 25px;">
+            <!-- Adicione uma classe ao container principal -->
+            <div class="header-content" style="display: flex; align-items: center; gap: 20px;">
                 <img src="Suzano LOGO.png" alt="Suzano Logo" style="height: 80px; width: auto;">
                 <div>
                     <div class="project-title">SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM</div>
-                    <div class="project-subtitle" style="font-size: 15px; line-height: 1.3;"><strong>Acompanhamento do Projeto</strong> - Semana 12 (23/11 até 30/11)</div>
+                    <div class="project-subtitle" id="project-subtitle"><strong>Acompanhamento do Projeto</strong> - Semana 12 (23/11 até 30/11)</div>
                 </div>
             </div>
             
-            <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
                 <div class="project-info">
                     <div class="info-item">
                         <div class="info-label">Duração</div>
@@ -1173,20 +1393,77 @@
                         <div class="info-label">Término</div>
                         <div class="info-value">09/01/2026</div>
                     </div>
-               </div>
-<div style="display: flex; flex-direction: column; align-items: center; margin-left: 20px; position: relative; top: -1px;">
-    <!-- Logo FW Company (acima) -->
-    <img src="FW LOGO (remov).png" alt="FW Company Logo" 
-         style="height: 60px; width: auto;">
-    
-    <!-- Logos Altercon e Delservin (abaixo, na mesma linha) -->
-    <div style="display: flex; align-items: center; gap: 15px; margin-top: -12px;">
-        <img src="Altercon LOGO.png" alt="Altercon LOGO" style="height: 60px; width: auto;">
-        <img src="Delservin LOGO.png" alt="Delservin LOGO" style="height: 29px; width: auto;">
-    </div>
-</div>
-</div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; margin-left: 20px; position: relative; top: -1px;">
+                    <!-- Logo FW Company (acima) -->
+                    <img src="FW LOGO (remov).png" alt="FW Company Logo" 
+                         style="height: 60px; width: auto;">
+                    
+                    <!-- Logos Altercon e Delservin (abaixo, na mesma linha) -->
+                    <div style="display: flex; align-items: center; gap: 15px; margin-top: -12px;">
+                        <img src="Altercon LOGO.png" alt="Altercon LOGO" style="height: 60px; width: auto;">
+                        <img src="Delservin LOGO.png" alt="Delservin LOGO" style="height: 29px; width: auto;">
+                    </div>
+                </div>
+                
             </div>
+        
+            
+            <!-- Seletor de Semana no cabeçalho (versão simplificada) -->
+<div class="week-selector-header">
+    <div class="week-selector-label">Seletor de Semana:</div>
+    
+    <!-- REMOVIDOS: Botões rápidos de semana -->
+    <!-- 
+    <div class="week-selector-buttons">
+        <button class="week-button-header" data-week="1">S.01</button>
+        <button class="week-button-header" data-week="4">S.04</button>
+        <button class="week-button-header" data-week="8">S.08</button>
+        <button class="week-button-header active" data-week="12">S.12</button>
+        <button class="week-button-header" data-week="16">S.16</button>
+        /* Remover estas classes */
+.week-selector-buttons {
+    /* ... */
+}
+
+.week-button-header {
+    /* ... */
+}
+    </div>
+    -->
+    
+    <div class="week-dropdown-header">
+        <select id="weekSelectHeader">
+            <option value="1">S.01 (14/09)</option>
+            <option value="2">S.02 (21/09)</option>
+            <option value="3">S.03 (28/09)</option>
+            <option value="4">S.04 (05/10)</option>
+            <option value="5">S.05 (12/10)</option>
+            <option value="6">S.06 (19/10)</option>
+            <option value="7">S.07 (26/10)</option>
+            <option value="8">S.08 (02/11)</option>
+            <option value="9">S.09 (09/11)</option>
+            <option value="10">S.10 (16/11)</option>
+            <option value="11">S.11 (23/11)</option>
+            <option value="12" selected>S.12 (30/11)</option>
+            <option value="13">S.13 (07/12)</option>
+            <option value="14">S.14 (14/12)</option>
+            <option value="15">S.15 (21/12)</option>
+            <option value="16">S.16 (28/12)</option>
+            <option value="17">S.17 (04/01)</option>
+        </select>
+    </div>
+    
+    <div class="current-week-indicator-header">
+        <i class="fas fa-calendar-check"></i>
+        <span id="currentWeekIndicator">Semana Atual: S.12</span>
+    </div>
+    
+    <!-- Botão Atualizar -->
+    <button class="update-button-header" id="updateDashboardBtn">
+        <i class="fas fa-sync-alt"></i> Atualizar
+    </button>
+</div>
         </div>
         
         <div class="tabs-container">
@@ -1437,217 +1714,9 @@
                                     <th>S.17<br>04/01</th>
                                 </tr>
                             </thead>
-                            <tbody>
-    <!-- Marcos Principais -->
-    <tr>
-        <td class="eap-header" style="background-color: #2c3e50;">1.1 Marcos Principais</td>
-        <td colspan="17"></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Início do Projeto (15/09)</td>
-        <td style="background-color: #2c3e50; color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Término do Projeto (09/01)</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td style="background-color: #2c3e50; color: white; text-align: center; font-size: 11px; font-weight: bold;">0%</td>
-    </tr>
-
-    <!-- Engenharia -->
-    <tr>
-        <td class="eap-header" style="background-color: #3498db;">1.2 Engenharia (20%)</td>
-        <td colspan="17"></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Elaboração dos Projetos</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Aprovação dos Projetos</td>
-        <td></td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Montagem dos Equipamentos</td>
-        <td></td><td></td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">10%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">25%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">40%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">75%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">85%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">90%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">95%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Aprovação final</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Despacho do Painel</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-active" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td>
-    </tr>
-
-    <!-- Fornecimento -->
-    <tr>
-        <td class="eap-header" style="background-color: #9b59b6;">1.3 Fornecimento (15%) - CONCLUÍDA</td>
-        <td colspan="17"></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Compra de Materiais</td>
-        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Transporte dos Materiais</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Mobilização</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-supply" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-
-    <!-- Construção e Montagem -->
-    <tr>
-        <td class="eap-header" style="background-color: #2ecc71;">1.4 Construção e Montagem (54%)</td>
-        <td colspan="17"></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Montagem de encaminhamentos</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Lançamento dos cabos</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td></td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Ligação dos cabos nos motores</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td></td>
-        <td></td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Instalação do painel PL-001</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td><td></td><td></td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">40%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">80%</td>
-        <td></td><td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Ligações elétricas dos motores</td>
-        <td></td><td></td><td></td><td></td><td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td><td></td><td></td>
-        <td></td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">20%</td>
-        <td class="task-construction" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
-        <td></td><td></td><td></td>
-    </tr>
-
-    <!-- Comissionamento -->
-    <tr>
-        <td class="eap-header" style="background-color: #f1c40f;">1.5 Comissionamento (8%)</td>
-        <td colspan="17"></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Testes de equipamentos</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">15%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">85%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">95%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Megação de cabos e motores</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">30%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">70%</td>
-        <td class="task-commissioning" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td><td></td><td></td>
-    </tr>
-
-    <!-- Operação Assistida -->
-    <tr>
-        <td class="eap-header" style="background-color: #e74c3c;">1.6 Operação Assistida (3%)</td>
-        <td colspan="17"></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Aceite final dos serviços</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">60%</td>
-        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Limpeza final</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td>
-        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td class="eap-subitem">Desmobilização</td>
-        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td>
-        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">50%</td>
-        <td class="task-operation" style="color: white; text-align: center; font-size: 11px; font-weight: bold;">100%</td>
-    </tr>
-</tbody>
+                            <tbody id="gantt-table-body">
+                                <!-- Conteúdo será gerado dinamicamente via JavaScript -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -2026,211 +2095,217 @@
             <div class="tab-content" id="data-update">
                 <h2 class="section-title"><i class="fas fa-database"></i> Atualização de Dados via CSV</h2>
                 
-                <div class="upload-section">
-                    <div class="upload-title"><i class="fas fa-file-csv"></i> 1. Dados da Visão Geral</div>
-                    <div class="upload-description">
-                        Faça upload do arquivo CSV contendo os dados atualizados da aba "Visão Geral".
-                        O arquivo deve conter os percentuais de progresso por fase do projeto.
-                    </div>
-                    
-                    <div class="csv-format">
-                        <div class="format-title">Formato Esperado:</div>
-                        <div>CSV com cabeçalhos: fase, progresso_previsto, progresso_real, status</div>
-                        <div class="format-example">
-                            fase,progresso_previsto,progresso_real,status<br>
-                            Engenharia,59.6,80.0,Não atrasada<br>
-                            Fornecimento,100.0,100.0,Concluída<br>
-                            Construção e Montagem,56.2,74.3,Não atrasada<br>
-                            Comissionamento,0.0,62.5,Não atrasada
+                <!-- Layout 2x2 para as seções de upload -->
+                <div class="upload-sections-grid">
+                    <!-- Seção 1: Dados da Visão Geral -->
+                    <div class="upload-section">
+                        <div class="upload-title"><i class="fas fa-file-csv"></i> 1. Dados da Visão Geral</div>
+                        <div class="upload-description">
+                            Faça upload do arquivo CSV contendo os dados atualizados da aba "Visão Geral".
+                            O arquivo deve conter os percentuais de progresso por fase do projeto.
                         </div>
-                        <a href="#" class="download-template" onclick="downloadTemplate('visao_geral')">
-                            <i class="fas fa-download"></i> Baixar Template
-                        </a>
-                    </div>
-                    
-                    <div class="upload-area" id="uploadArea1">
-                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
-                        <div class="upload-subtext">ou</div>
-                        <button class="browse-button" onclick="document.getElementById('fileInput1').click()">Procurar Arquivo</button>
-                        <input type="file" id="fileInput1" class="file-input" accept=".csv">
-                    </div>
-                    
-                    <div id="selectedFile1" class="selected-file" style="display: none;">
-                        <div class="file-info">
-                            <i class="fas fa-file-csv file-icon"></i>
-                            <div>
-                                <div class="file-name" id="fileName1"></div>
-                                <div class="file-size" id="fileSize1"></div>
+                        
+                        <div class="csv-format">
+                            <div class="format-title">Formato Esperado:</div>
+                            <div>CSV com cabeçalhos: fase, progresso_previsto, progresso_real, status</div>
+                            <div class="format-example">
+                                fase,progresso_previsto,progresso_real,status<br>
+                                Engenharia,59.6,80.0,Não atrasada<br>
+                                Fornecimento,100.0,100.0,Concluída<br>
+                                Construção e Montagem,56.2,74.3,Não atrasada<br>
+                                Comissionamento,0.0,62.5,Não atrasada
                             </div>
+                            <a href="#" class="download-template" onclick="downloadTemplate('visao_geral')">
+                                <i class="fas fa-download"></i> Baixar Template
+                            </a>
                         </div>
-                        <button class="remove-file" onclick="removeFile(1)"><i class="fas fa-times"></i></button>
-                    </div>
-                    
-                    <div id="csvPreview1" class="csv-preview" style="display: none;"></div>
-                    
-                    <div id="uploadStatus1" class="upload-status"></div>
-                    
-                    <div class="upload-actions">
-                        <button class="clear-button" onclick="clearSection(1)">Limpar</button>
-                        <button class="upload-button" id="uploadButton1" onclick="uploadCSV(1)" disabled>Enviar Dados</button>
-                    </div>
-                </div>
-                
-                <div class="upload-section">
-                    <div class="upload-title"><i class="fas fa-chart-line"></i> 2. Dados da Curva S</div>
-                    <div class="upload-description">
-                        Faça upload do arquivo CSV contendo os dados atualizados da aba "Curva S".
-                        O arquivo deve conter o progresso semanal previsto e real.
-                    </div>
-                    
-                    <div class="csv-format">
-                        <div class="format-title">Formato Esperado:</div>
-                        <div>CSV com cabeçalhos: semana, previsto, real</div>
-                        <div class="format-example">
-                            semana,previsto,real<br>
-                            S.01,15,14<br>
-                            S.02,21,14<br>
-                            S.03,22,14<br>
-                            ...<br>
-                            S.12,57,76.1<br>
-                            S.13,81,null<br>
-                            S.14,88,null
+                        
+                        <div class="upload-area" id="uploadArea1">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                            <div class="upload-subtext">ou</div>
+                            <button class="browse-button" onclick="document.getElementById('fileInput1').click()">Procurar Arquivo</button>
+                            <input type="file" id="fileInput1" class="file-input" accept=".csv">
                         </div>
-                        <a href="#" class="download-template" onclick="downloadTemplate('curva_s')">
-                            <i class="fas fa-download"></i> Baixar Template
-                        </a>
-                    </div>
-                    
-                    <div class="upload-area" id="uploadArea2">
-                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
-                        <div class="upload-subtext">ou</div>
-                        <button class="browse-button" onclick="document.getElementById('fileInput2').click()">Procurar Arquivo</button>
-                        <input type="file" id="fileInput2" class="file-input" accept=".csv">
-                    </div>
-                    
-                    <div id="selectedFile2" class="selected-file" style="display: none;">
-                        <div class="file-info">
-                            <i class="fas fa-file-csv file-icon"></i>
-                            <div>
-                                <div class="file-name" id="fileName2"></div>
-                                <div class="file-size" id="fileSize2"></div>
+                        
+                        <div id="selectedFile1" class="selected-file" style="display: none;">
+                            <div class="file-info">
+                                <i class="fas fa-file-csv file-icon"></i>
+                                <div>
+                                    <div class="file-name" id="fileName1"></div>
+                                    <div class="file-size" id="fileSize1"></div>
+                                </div>
                             </div>
+                            <button class="remove-file" onclick="removeFile(1)"><i class="fas fa-times"></i></button>
                         </div>
-                        <button class="remove-file" onclick="removeFile(2)"><i class="fas fa-times"></i></button>
-                    </div>
-                    
-                    <div id="csvPreview2" class="csv-preview" style="display: none;"></div>
-                    
-                    <div id="uploadStatus2" class="upload-status"></div>
-                    
-                    <div class="upload-actions">
-                        <button class="clear-button" onclick="clearSection(2)">Limpar</button>
-                        <button class="upload-button" id="uploadButton2" onclick="uploadCSV(2)" disabled>Enviar Dados</button>
-                    </div>
-                </div>
-                
-                <div class="upload-section">
-                    <div class="upload-title"><i class="fas fa-cogs"></i> 3. Dados do Comissionamento</div>
-                    <div class="upload-description">
-                        Faça upload do arquivo CSV contendo os dados atualizados da aba "Comissionamento".
-                        O arquivo deve conter o progresso dos equipamentos.
-                    </div>
-                    
-                    <div class="csv-format">
-                        <div class="format-title">Formato Esperado:</div>
-                        <div>CSV com cabeçalhos: equipamento, previsto, real</div>
-                        <div class="format-example">
-                            equipamento,previsto,real<br>
-                            Ventilador 1 - EC 01,0,75<br>
-                            Ventilador 2 - EC 02,0,75<br>
-                            Exaustor 1 - EA 01,0,75<br>
-                            Exaustor 2 - EA 02,0,25
+                        
+                        <div id="csvPreview1" class="csv-preview" style="display: none;"></div>
+                        
+                        <div id="uploadStatus1" class="upload-status"></div>
+                        
+                        <div class="upload-actions">
+                            <button class="clear-button" onclick="clearSection(1)">Limpar</button>
+                            <button class="upload-button" id="uploadButton1" onclick="uploadCSV(1)" disabled>Enviar Dados</button>
                         </div>
-                        <a href="#" class="download-template" onclick="downloadTemplate('comissionamento')">
-                            <i class="fas fa-download"></i> Baixar Template
-                        </a>
                     </div>
                     
-                    <div class="upload-area" id="uploadArea3">
-                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
-                        <div class="upload-subtext">ou</div>
-                        <button class="browse-button" onclick="document.getElementById('fileInput3').click()">Procurar Arquivo</button>
-                        <input type="file" id="fileInput3" class="file-input" accept=".csv">
-                    </div>
-                    
-                    <div id="selectedFile3" class="selected-file" style="display: none;">
-                        <div class="file-info">
-                            <i class="fas fa-file-csv file-icon"></i>
-                            <div>
-                                <div class="file-name" id="fileName3"></div>
-                                <div class="file-size" id="fileSize3"></div>
+                    <!-- Seção 2: Dados da Curva S -->
+                    <div class="upload-section">
+                        <div class="upload-title"><i class="fas fa-chart-line"></i> 2. Dados da Curva S</div>
+                        <div class="upload-description">
+                            Faça upload do arquivo CSV contendo os dados atualizados da aba "Curva S".
+                            O arquivo deve conter o progresso semanal previsto e real.
+                        </div>
+                        
+                        <div class="csv-format">
+                            <div class="format-title">Formato Esperado:</div>
+                            <div>CSV com cabeçalhos: semana, previsto, real</div>
+                            <div class="format-example">
+                                semana,previsto,real<br>
+                                S.01,15,14<br>
+                                S.02,21,14<br>
+                                S.03,22,14<br>
+                                ...<br>
+                                S.12,57,76.1<br>
+                                S.13,81,null<br>
+                                S.14,88,null
                             </div>
+                            <a href="#" class="download-template" onclick="downloadTemplate('curva_s')">
+                                <i class="fas fa-download"></i> Baixar Template
+                            </a>
                         </div>
-                        <button class="remove-file" onclick="removeFile(3)"><i class="fas fa-times"></i></button>
-                    </div>
-                    
-                    <div id="csvPreview3" class="csv-preview" style="display: none;"></div>
-                    
-                    <div id="uploadStatus3" class="upload-status"></div>
-                    
-                    <div class="upload-actions">
-                        <button class="clear-button" onclick="clearSection(3)">Limpar</button>
-                        <button class="upload-button" id="uploadButton3" onclick="uploadCSV(3)" disabled>Enviar Dados</button>
-                    </div>
-                </div>
-                
-                <!-- NOVA SEÇÃO: Dados de HHT / Segurança -->
-                <div class="upload-section">
-                    <div class="upload-title"><i class="fas fa-hard-hat"></i> 4. Dados de HHT / Segurança</div>
-                    <div class="upload-description">
-                        Faça upload do arquivo CSV contendo os dados atualizados de HHT e indicadores de segurança.
-                        Use o formato do arquivo "Segurança HHT.csv".
-                    </div>
-                    
-                    <div class="csv-format">
-                        <div class="format-title">Formato Esperado:</div>
-                        <div>CSV com cabeçalhos: Descritivo;Semana Atual;Acumulado;datas...</div>
-                        <div class="format-example">
-                            Descritivo;Semana Atual;Acumulado;14/09/2025;21/09/2025;28/09/2025;05/10/2025...<br>
-                            Hht(x1000);396;2948;132;44;44;44;220;88;396;396;396;396;396;396;0;0;0;0;0;0<br>
-                            CAF - Acidentes Com Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0<br>
-                            SAF - Acidentes Sem Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0<br>
-                            ...
+                        
+                        <div class="upload-area" id="uploadArea2">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                            <div class="upload-subtext">ou</div>
+                            <button class="browse-button" onclick="document.getElementById('fileInput2').click()">Procurar Arquivo</button>
+                            <input type="file" id="fileInput2" class="file-input" accept=".csv">
                         </div>
-                        <a href="#" class="download-template" onclick="downloadTemplate('hht')">
-                            <i class="fas fa-download"></i> Baixar Template
-                        </a>
-                    </div>
-                    
-                    <div class="upload-area" id="uploadArea4">
-                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
-                        <div class="upload-subtext">ou</div>
-                        <button class="browse-button" onclick="document.getElementById('fileInput4').click()">Procurar Arquivo</button>
-                        <input type="file" id="fileInput4" class="file-input" accept=".csv">
-                    </div>
-                    
-                    <div id="selectedFile4" class="selected-file" style="display: none;">
-                        <div class="file-info">
-                            <i class="fas fa-file-csv file-icon"></i>
-                            <div>
-                                <div class="file-name" id="fileName4"></div>
-                                <div class="file-size" id="fileSize4"></div>
+                        
+                        <div id="selectedFile2" class="selected-file" style="display: none;">
+                            <div class="file-info">
+                                <i class="fas fa-file-csv file-icon"></i>
+                                <div>
+                                    <div class="file-name" id="fileName2"></div>
+                                    <div class="file-size" id="fileSize2"></div>
+                                </div>
                             </div>
+                            <button class="remove-file" onclick="removeFile(2)"><i class="fas fa-times"></i></button>
                         </div>
-                        <button class="remove-file" onclick="removeFile(4)"><i class="fas fa-times"></i></button>
+                        
+                        <div id="csvPreview2" class="csv-preview" style="display: none;"></div>
+                        
+                        <div id="uploadStatus2" class="upload-status"></div>
+                        
+                        <div class="upload-actions">
+                            <button class="clear-button" onclick="clearSection(2)">Limpar</button>
+                            <button class="upload-button" id="uploadButton2" onclick="uploadCSV(2)" disabled>Enviar Dados</button>
+                        </div>
                     </div>
                     
-                    <div id="csvPreview4" class="csv-preview" style="display: none;"></div>
+                    <!-- Seção 3: Dados do Comissionamento -->
+                    <div class="upload-section">
+                        <div class="upload-title"><i class="fas fa-cogs"></i> 3. Dados do Comissionamento</div>
+                        <div class="upload-description">
+                            Faça upload do arquivo CSV contendo os dados atualizados da aba "Comissionamento".
+                            O arquivo deve conter o progresso dos equipamentos.
+                        </div>
+                        
+                        <div class="csv-format">
+                            <div class="format-title">Formato Esperado:</div>
+                            <div>CSV com cabeçalhos: equipamento, previsto, real</div>
+                            <div class="format-example">
+                                equipamento,previsto,real<br>
+                                Ventilador 1 - EC 01,0,75<br>
+                                Ventilador 2 - EC 02,0,75<br>
+                                Exaustor 1 - EA 01,0,75<br>
+                                Exaustor 2 - EA 02,0,25
+                            </div>
+                            <a href="#" class="download-template" onclick="downloadTemplate('comissionamento')">
+                                <i class="fas fa-download"></i> Baixar Template
+                            </a>
+                        </div>
+                        
+                        <div class="upload-area" id="uploadArea3">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                            <div class="upload-subtext">ou</div>
+                            <button class="browse-button" onclick="document.getElementById('fileInput3').click()">Procurar Arquivo</button>
+                            <input type="file" id="fileInput3" class="file-input" accept=".csv">
+                        </div>
+                        
+                        <div id="selectedFile3" class="selected-file" style="display: none;">
+                            <div class="file-info">
+                                <i class="fas fa-file-csv file-icon"></i>
+                                <div>
+                                    <div class="file-name" id="fileName3"></div>
+                                    <div class="file-size" id="fileSize3"></div>
+                                </div>
+                            </div>
+                            <button class="remove-file" onclick="removeFile(3)"><i class="fas fa-times"></i></button>
+                        </div>
+                        
+                        <div id="csvPreview3" class="csv-preview" style="display: none;"></div>
+                        
+                        <div id="uploadStatus3" class="upload-status"></div>
+                        
+                        <div class="upload-actions">
+                            <button class="clear-button" onclick="clearSection(3)">Limpar</button>
+                            <button class="upload-button" id="uploadButton3" onclick="uploadCSV(3)" disabled>Enviar Dados</button>
+                        </div>
+                    </div>
                     
-                    <div id="uploadStatus4" class="upload-status"></div>
-                    
-                    <div class="upload-actions">
-                        <button class="clear-button" onclick="clearSection(4)">Limpar</button>
-                        <button class="upload-button" id="uploadButton4" onclick="uploadCSV(4)" disabled>Enviar Dados</button>
+                    <!-- Seção 4: Dados de HHT / Segurança -->
+                    <div class="upload-section">
+                        <div class="upload-title"><i class="fas fa-hard-hat"></i> 4. Dados de HHT / Segurança</div>
+                        <div class="upload-description">
+                            Faça upload do arquivo CSV contendo os dados atualizados de HHT e indicadores de segurança.
+                            Use o formato do arquivo "Segurança HHT.csv".
+                        </div>
+                        
+                        <div class="csv-format">
+                            <div class="format-title">Formato Esperado:</div>
+                            <div>CSV com cabeçalhos: Descritivo;Semana Atual;Acumulado;datas...</div>
+                            <div class="format-example">
+                                Descritivo;Semana Atual;Acumulado;14/09/2025;21/09/2025;28/09/2025;05/10/2025...<br>
+                                Hht(x1000);396;2948;132;44;44;44;220;88;396;396;396;396;396;396;0;0;0;0;0;0<br>
+                                CAF - Acidentes Com Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0<br>
+                                SAF - Acidentes Sem Afastamentos;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0<br>
+                                ...
+                            </div>
+                            <a href="#" class="download-template" onclick="downloadTemplate('hht')">
+                                <i class="fas fa-download"></i> Baixar Template
+                            </a>
+                        </div>
+                        
+                        <div class="upload-area" id="uploadArea4">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div class="upload-text">Arraste e solte seu arquivo CSV aqui</div>
+                            <div class="upload-subtext">ou</div>
+                            <button class="browse-button" onclick="document.getElementById('fileInput4').click()">Procurar Arquivo</button>
+                            <input type="file" id="fileInput4" class="file-input" accept=".csv">
+                        </div>
+                        
+                        <div id="selectedFile4" class="selected-file" style="display: none;">
+                            <div class="file-info">
+                                <i class="fas fa-file-csv file-icon"></i>
+                                <div>
+                                    <div class="file-name" id="fileName4"></div>
+                                    <div class="file-size" id="fileSize4"></div>
+                                </div>
+                            </div>
+                            <button class="remove-file" onclick="removeFile(4)"><i class="fas fa-times"></i></button>
+                        </div>
+                        
+                        <div id="csvPreview4" class="csv-preview" style="display: none;"></div>
+                        
+                        <div id="uploadStatus4" class="upload-status"></div>
+                        
+                        <div class="upload-actions">
+                            <button class="clear-button" onclick="clearSection(4)">Limpar</button>
+                            <button class="upload-button" id="uploadButton4" onclick="uploadCSV(4)" disabled>Enviar Dados</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -2259,7 +2334,31 @@
             overview: null,
             sCurve: null,
             commissioning: null,
-            hht: null  // Adicionado para armazenar dados HHT
+            hht: null
+        };
+        
+        // Variável para controlar a semana selecionada
+        let currentWeek = 12; // Semana atual inicial
+        
+        // Dados das semanas (número, datas e nomes)
+        const weekData = {
+            1: { number: 'S.01', startDate: '14/09', endDate: '20/09', fullDate: '14/09 até 20/09' },
+            2: { number: 'S.02', startDate: '21/09', endDate: '27/09', fullDate: '21/09 até 27/09' },
+            3: { number: 'S.03', startDate: '28/09', endDate: '04/10', fullDate: '28/09 até 04/10' },
+            4: { number: 'S.04', startDate: '05/10', endDate: '11/10', fullDate: '05/10 até 11/10' },
+            5: { number: 'S.05', startDate: '12/10', endDate: '18/10', fullDate: '12/10 até 18/10' },
+            6: { number: 'S.06', startDate: '19/10', endDate: '25/10', fullDate: '19/10 até 25/10' },
+            7: { number: 'S.07', startDate: '26/10', endDate: '01/11', fullDate: '26/10 até 01/11' },
+            8: { number: 'S.08', startDate: '02/11', endDate: '08/11', fullDate: '02/11 até 08/11' },
+            9: { number: 'S.09', startDate: '09/11', endDate: '15/11', fullDate: '09/11 até 15/11' },
+            10: { number: 'S.10', startDate: '16/11', endDate: '22/11', fullDate: '16/11 até 22/11' },
+            11: { number: 'S.11', startDate: '23/11', endDate: '29/11', fullDate: '23/11 até 29/11' },
+            12: { number: 'S.12', startDate: '30/11', endDate: '06/12', fullDate: '30/11 até 06/12' },
+            13: { number: 'S.13', startDate: '07/12', endDate: '13/12', fullDate: '07/12 até 13/12' },
+            14: { number: 'S.14', startDate: '14/12', endDate: '20/12', fullDate: '14/12 até 20/12' },
+            15: { number: 'S.15', startDate: '21/12', endDate: '27/12', fullDate: '21/12 até 27/12' },
+            16: { number: 'S.16', startDate: '28/12', endDate: '03/01', fullDate: '28/12 até 03/01' },
+            17: { number: 'S.17', startDate: '04/01', endDate: '10/01', fullDate: '04/01 até 10/01' }
         };
 
         // Tab switching functionality
@@ -2284,16 +2383,375 @@
             // Inicializar eventos de upload
             initializeUploadEvents();
             
+            // Inicializar seletor de semana no cabeçalho
+            initializeWeekSelectorHeader();
+            
             // Initialize charts
             initializeCharts();
             
             // Carregar dados iniciais do HHT
             loadInitialHHTData();
+            
+            // Inicializar tabela Gantt
+            initializeGanttTable();
+            
+            // Configurar botão de atualização
+            document.getElementById('updateDashboardBtn').addEventListener('click', updateDashboard);
         });
+        
+        // Função para inicializar o seletor de semana no cabeçalho
+        function initializeWeekSelectorHeader() {
+            // Eventos para os botões rápidos de semana no cabeçalho
+            document.querySelectorAll('.week-button-header').forEach(button => {
+                button.addEventListener('click', function() {
+                    const week = parseInt(this.getAttribute('data-week'));
+                    selectWeek(week);
+                });
+            });
+            
+            // Evento para o dropdown de seleção de semana no cabeçalho
+            document.getElementById('weekSelectHeader').addEventListener('change', function() {
+                const week = parseInt(this.value);
+                selectWeek(week);
+            });
+            
+            // Selecionar semana inicial
+            selectWeek(currentWeek);
+        }
+        
+        // Função para selecionar uma semana
+        function selectWeek(week) {
+            currentWeek = week;
+            
+            // Atualizar botões rápidos no cabeçalho
+            document.querySelectorAll('.week-button-header').forEach(button => {
+                const buttonWeek = parseInt(button.getAttribute('data-week'));
+                button.classList.toggle('active', buttonWeek === week);
+            });
+            
+            // Atualizar dropdown no cabeçalho
+            document.getElementById('weekSelectHeader').value = week;
+            
+            // Atualizar indicador de semana atual no cabeçalho
+            updateWeekIndicatorHeader();
+            
+            // Atualizar subtítulo do projeto
+            updateProjectSubtitle();
+            
+            // Atualizar tabelas e gráficos que dependem da semana
+            updateGanttTable();
+            updateHHTTableHighlight();
+        }
+        
+        // Função para atualizar o indicador visual da semana atual no cabeçalho
+        function updateWeekIndicatorHeader() {
+            const weekInfo = weekData[currentWeek];
+            const indicator = document.getElementById('currentWeekIndicator');
+            if (indicator && weekInfo) {
+                indicator.textContent = `Semana Atual: ${weekInfo.number}`;
+            }
+        }
+        
+        // Função para atualizar o subtítulo do projeto
+        function updateProjectSubtitle() {
+            const weekInfo = weekData[currentWeek];
+            const subtitle = document.getElementById('project-subtitle');
+            if (subtitle && weekInfo) {
+                subtitle.innerHTML = `<strong>Acompanhamento do Projeto</strong> - ${weekInfo.number} (${weekInfo.fullDate})`;
+            }
+        }
+        
+        // Função para atualizar o dashboard
+        function updateDashboard() {
+            // Simular uma atualização
+            const updateBtn = document.getElementById('updateDashboardBtn');
+            const originalText = updateBtn.innerHTML;
+            
+            // Mostrar indicador de carregamento
+            updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Atualizando...';
+            updateBtn.disabled = true;
+            
+            // Simular processo de atualização
+            setTimeout(() => {
+                // Atualizar dados
+                if (csvData.hht) {
+                    updateHHTData(csvData.hht);
+                }
+                
+                if (csvData.overview) {
+                    updateOverviewData(csvData.overview);
+                }
+                
+                if (csvData.sCurve) {
+                    updateSCurveData(csvData.sCurve);
+                }
+                
+                if (csvData.commissioning) {
+                    updateCommissioningData(csvData.commissioning);
+                }
+                
+                // Restaurar botão
+                updateBtn.innerHTML = originalText;
+                updateBtn.disabled = false;
+                
+                // Mostrar mensagem de sucesso
+                showNotification('Dashboard atualizado com sucesso!', 'success');
+                
+                // Atualizar data no rodapé
+                updateFooterDate();
+                
+            }, 1000);
+        }
+        
+        // Função para mostrar notificação
+        function showNotification(message, type) {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="position: fixed; top: 130px; right: 500px; background: ${type === 'success' ? '#27ae60' : '#e74c3c'}; 
+                     color: white; padding: 15px 20px; border-radius: 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+                     z-index: 1000; display: flex; align-items: center; gap: 10px; min-width: 300px;">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Função para atualizar data no rodapé
+        function updateFooterDate() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            const footerDate = document.querySelector('.footer-info p');
+            if (footerDate) {
+                footerDate.textContent = `Dashboard de acompanhamento do projeto SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM | Atualizado em: ${day}/${month}/${year} ${hours}:${minutes}`;
+            }
+        }
+        
+        // Função para inicializar a tabela Gantt
+        function initializeGanttTable() {
+            const ganttData = {
+                // Marcos Principais
+                '1.1 Marcos Principais': {
+                    type: 'header',
+                    color: '#2c3e50'
+                },
+                'Início do Projeto (15/09)': {
+                    weeks: [['100%', 0]],
+                    color: '#2c3e50'
+                },
+                'Término do Projeto (09/01)': {
+                    weeks: [['0%', 16]],
+                    color: '#2c3e50'
+                },
+                
+                // Engenharia
+                '1.2 Engenharia (20%)': {
+                    type: 'header',
+                    color: '#3498db'
+                },
+                'Elaboração dos Projetos': {
+                    weeks: [['50%', 0], ['100%', 1]],
+                    color: '#3498db'
+                },
+                'Aprovação dos Projetos': {
+                    weeks: [['50%', 1], ['100%', 2]],
+                    color: '#3498db'
+                },
+                'Montagem dos Equipamentos': {
+                    weeks: [['10%', 2], ['25%', 3], ['40%', 4], ['60%', 5], ['75%', 6], ['85%', 7], ['90%', 8], ['95%', 9], ['100%', 10]],
+                    color: '#3498db'
+                },
+                'Aprovação final': {
+                    weeks: [['100%', 11]],
+                    color: '#3498db'
+                },
+                'Despacho do Painel': {
+                    weeks: [['50%', 11], ['100%', 12]],
+                    color: '#3498db'
+                },
+                
+                // Fornecimento
+                '1.3 Fornecimento (15%) - CONCLUÍDA': {
+                    type: 'header',
+                    color: '#9b59b6'
+                },
+                'Compra de Materiais': {
+                    weeks: [['50%', 0], ['100%', 1]],
+                    color: '#9b59b6'
+                },
+                'Transporte dos Materiais': {
+                    weeks: [['50%', 5], ['100%', 6]],
+                    color: '#9b59b6'
+                },
+                'Mobilização': {
+                    weeks: [['50%', 5], ['100%', 6]],
+                    color: '#9b59b6'
+                },
+                
+                // Construção e Montagem
+                '1.4 Construção e Montagem (54%)': {
+                    type: 'header',
+                    color: '#2ecc71'
+                },
+                'Montagem de encaminhamentos': {
+                    weeks: [['30%', 5], ['60%', 6], ['100%', 7]],
+                    color: '#2ecc71'
+                },
+                'Lançamento dos cabos': {
+                    weeks: [['30%', 6], ['70%', 7], ['100%', 8]],
+                    color: '#2ecc71'
+                },
+                'Ligação dos cabos nos motores': {
+                    weeks: [['30%', 7], ['70%', 8], ['100%', 9]],
+                    color: '#2ecc71'
+                },
+                'Instalação do painel PL-001': {
+                    weeks: [['40%', 11], ['80%', 12]],
+                    color: '#2ecc71'
+                },
+                'Ligações elétricas dos motores': {
+                    weeks: [['20%', 12], ['60%', 13]],
+                    color: '#2ecc71'
+                },
+                
+                // Comissionamento
+                '1.5 Comissionamento (8%)': {
+                    type: 'header',
+                    color: '#f1c40f'
+                },
+                'Testes de equipamentos': {
+                    weeks: [['15%', 7], ['30%', 8], ['50%', 9], ['70%', 10], ['85%', 11], ['95%', 12], ['100%', 13]],
+                    color: '#f1c40f'
+                },
+                'Megação de cabos e motores': {
+                    weeks: [['30%', 12], ['70%', 13], ['100%', 14]],
+                    color: '#f1c40f'
+                },
+                
+                // Operação Assistida
+                '1.6 Operação Assistida (3%)': {
+                    type: 'header',
+                    color: '#e74c3c'
+                },
+                'Aceite final dos serviços': {
+                    weeks: [['60%', 14], ['100%', 15]],
+                    color: '#e74c3c'
+                },
+                'Limpeza final': {
+                    weeks: [['100%', 16]],
+                    color: '#e74c3c'
+                },
+                'Desmobilização': {
+                    weeks: [['50%', 16], ['100%', 17]],
+                    color: '#e74c3c'
+                }
+            };
+            
+            window.ganttData = ganttData;
+            updateGanttTable();
+        }
+        
+        // Função para atualizar a tabela Gantt com a semana selecionada
+        function updateGanttTable() {
+            const tbody = document.getElementById('gantt-table-body');
+            if (!tbody || !window.ganttData) return;
+            
+            tbody.innerHTML = '';
+            
+            // Adicionar cada linha da tabela Gantt
+            Object.entries(window.ganttData).forEach(([activity, data]) => {
+                const row = document.createElement('tr');
+                
+                // Célula da atividade
+                const activityCell = document.createElement('td');
+                
+                if (data.type === 'header') {
+                    activityCell.className = 'eap-header';
+                    activityCell.style.backgroundColor = data.color;
+                    activityCell.style.color = 'white';
+                    activityCell.textContent = activity;
+                } else {
+                    activityCell.className = 'eap-subitem';
+                    activityCell.textContent = activity;
+                }
+                
+                row.appendChild(activityCell);
+                
+                // Células para cada semana (0 a 16 para S.01 a S.17)
+                for (let week = 0; week < 17; week++) {
+                    const cell = document.createElement('td');
+                    
+                    // Verificar se esta atividade tem dados para esta semana
+                    let hasActivity = false;
+                    if (data.weeks) {
+                        data.weeks.forEach(([value, weekIndex]) => {
+                            if (weekIndex === week) {
+                                hasActivity = true;
+                                cell.style.backgroundColor = data.color;
+                                cell.style.color = 'white';
+                                cell.style.textAlign = 'center';
+                                cell.style.fontSize = '11px';
+                                cell.style.fontWeight = 'bold';
+                                cell.textContent = value;
+                                
+                                // Adicionar classe específica para o tipo de tarefa
+                                if (data.color === '#3498db') cell.classList.add('task-active');
+                                else if (data.color === '#9b59b6') cell.classList.add('task-supply');
+                                else if (data.color === '#2ecc71') cell.classList.add('task-construction');
+                                else if (data.color === '#f1c40f') cell.classList.add('task-commissioning');
+                                else if (data.color === '#e74c3c') cell.classList.add('task-operation');
+                            }
+                        });
+                    }
+                    
+                    // Destacar semana atual
+                    if (week === currentWeek - 1) {
+                        cell.classList.add('current-week');
+                    }
+                    
+                    row.appendChild(cell);
+                }
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Função para atualizar destaque na tabela HHT
+        function updateHHTTableHighlight() {
+            const tableRows = document.querySelectorAll('#hht-table-body tr');
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                cells.forEach((cell, index) => {
+                    // Remover destaque anterior
+                    cell.classList.remove('current-week');
+                    
+                    // Aplicar destaque para a semana atual (índices 3 a 19 são as semanas)
+                    if (index >= 3 && index <= 19) {
+                        const weekIndex = index - 3;
+                        if (weekIndex === currentWeek - 1) {
+                            cell.classList.add('current-week');
+                        }
+                    }
+                });
+            });
+        }
         
         function initializeUploadEvents() {
             // Inicializar eventos de arrastar e soltar para cada área de upload
-            for (let i = 1; i <= 4; i++) { // Alterado para incluir a seção 4
+            for (let i = 1; i <= 4; i++) {
                 const uploadArea = document.getElementById(`uploadArea${i}`);
                 const fileInput = document.getElementById(`fileInput${i}`);
                 const uploadButton = document.getElementById(`uploadButton${i}`);
@@ -2344,6 +2802,9 @@
             }
         }
         
+        // O restante do código JavaScript permanece o mesmo...
+        // [O restante das funções JavaScript permanece inalterado]
+
         function loadInitialHHTData() {
             // Dados iniciais do CSV fornecido
             const hhtData = {
@@ -2543,8 +3004,8 @@
                             weekCell.className = 'positive-value';
                         }
                         
-                        // Destacar semana atual (S.12)
-                        if (i === 11) { // S.12 é o índice 11 (0-based)
+                        // Destacar semana atual
+                        if (i === currentWeek - 1) {
                             weekCell.classList.add('current-week');
                         }
                         
@@ -2885,10 +3346,11 @@
             let tableHTML = '<table class="csv-table">';
             
             // Processar cabeçalhos
-            const headers = lines[0].split(',');
-            // Para HHT, usar separador ponto e vírgula
+            let headers;
             if (sectionNumber === 4) {
                 headers = lines[0].split(';');
+            } else {
+                headers = lines[0].split(',');
             }
             
             tableHTML += '<thead><tr>';
