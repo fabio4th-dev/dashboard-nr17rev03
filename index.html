@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
@@ -1586,7 +1587,7 @@
                     <i class="fas fa-chart-pie"></i> Visão Geral
                 </button>
                 <button class="tab-button" data-tab="wbs">
-                    <i class="fas fa-sitemap"></i> EAP
+                    <i class="fas fa-sitemap"></i> E.A.P.
                 </button>
                 <button class="tab-button" data-tab="progress">
                     <i class="fas fa-tasks"></i> Progresso
@@ -1744,7 +1745,7 @@
             </div>
             
             <div class="tab-content" id="wbs">
-                <h2 class="section-title"><i class="fas fa-sitemap"></i> Estrutura Analítica do Projeto (EAP)</h2>
+                <h2 class="section-title"><i class="fas fa-sitemap"></i> Estrutura Analítica do Projeto (E.A.P.)</h2>
                 
                 <div class="wbs-tree">
                     <div class="wbs-item wbs-level-1">1. SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM</div>
@@ -1753,7 +1754,7 @@
                     <div class="wbs-item wbs-level-3"> Início do Projeto </div>
                     <div class="wbs-item wbs-level-3"> Término do Projeto </div>
                     
-                    <div class="wbs-item wbs-level-2">1.2 Engenharia</div>
+                    <div class="wbs-item wbs-level-2">1.2 Engenharia  - CONCLUÍDA</div>
                     <div class="wbs-item wbs-level-3"> Elaboração dos Projetos</div>
                     <div class="wbs-item wbs-level-3"> Aprovação dos Projetos (Cliente)</div>
                     <div class="wbs-item wbs-level-3"> Montagem dos Equipamentos (Fornecedor)</div>
@@ -1765,7 +1766,7 @@
                     <div class="wbs-item wbs-level-3"> Transporte dos Materiais Para Imperatriz-MA</div>
                     <div class="wbs-item wbs-level-3"> Mobilização de Equipe e Recursos no Local</div>
                     
-                    <div class="wbs-item wbs-level-2">1.4 Construção e Montagem </div>
+                    <div class="wbs-item wbs-level-2">1.4 Construção e Montagem  - CONCLUÍDA </div>
                     <div class="wbs-item wbs-level-3"> Montagem de encaminhamentos</div>
                     <div class="wbs-item wbs-level-3"> Lançamento dos cabos</div>
                     <div class="wbs-item wbs-level-3"> Ligação dos cabos nos motores</div>
@@ -2454,7 +2455,7 @@
 </div>
         
         <div class="footer-info">
-            <p>Dashboard de acompanhamento do projeto SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM | Atualizado em: 30/11/2025</p>
+            <p>Dashboard de acompanhamento do projeto SUZANO IMPERATRIZ - ELÉTRICA NR-17 SECAGEM | Atualizado em: 05/12/2025</p>
             <p class="developer-info">Desenvolvido e editado por Fábio Mendes Rodrigues, Planejador da F.W. Company</p>
         </div>
     </div>
@@ -3277,7 +3278,7 @@
                     datasets: [
                         {
                             label: 'Progresso Previsto',
-                            data: [59.6, 100, 56.2, 0, 0],
+                            data: [93.3, 100, 77.8, 0, 0],
                             backgroundColor: 'rgba(52, 152, 219, 0.2)',
                             borderColor: '#3498db',
                             pointBackgroundColor: '#3498db',
@@ -3287,7 +3288,7 @@
                         },
                         {
                             label: 'Progresso Real',
-                            data: [80.0, 100, 74.3, 62.5, 0],
+                            data: [100.0, 100, 100, 75.0, 0],
                             backgroundColor: 'rgba(39, 174, 96, 0.2)',
                             borderColor: '#27ae60',
                             pointBackgroundColor: '#27ae60',
@@ -3319,7 +3320,7 @@
                 data: {
                     labels: ['Concluídas', 'Não Atrasadas', 'Atrasadas'],
                     datasets: [{
-                        data: [1, 5, 0],
+                        data: [3, 1, 0],
                         backgroundColor: [
                             '#27ae60',
                             '#3498db',
@@ -4018,7 +4019,7 @@
             
             switch(type) {
                 case 'visao_geral':
-                    csvContent = 'fase,progresso_previsto,progresso_real,status\nEngenharia,59.6,80.0,Não atrasada\nFornecimento,100.0,100.0,Concluída\nConstrução e Montagem,56.2,74.3,Não atrasada\nComissionamento,0.0,62.5,Não atrasada';
+                    csvContent = 'fase,progresso_previsto,progresso_real,status\nEngenharia,93.3,100.0,Concluída\nFornecimento,100.0,100.0,Concluída\nConstrução e Montagem,56.2,74.3,Não atrasada\nComissionamento,0.0,62.5,Não atrasada';
                     filename = 'template_visao_geral.csv';
                     break;
                 case 'curva_s':
